@@ -5,6 +5,7 @@ version.workspace = true
 authors.workspace = true
 repository.workspace = true
 edition = "2021"
+readme = "../README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,3 +13,7 @@ edition = "2021"
 clap = { version = "4.4.7", features = [ "derive" ] }
 lmml = { version = "0.0.0", path = "../lmml" }
 lmml-parser = { version = "0.0.0", path = "../lmml-parser" }
+
+[[bin]]
+name = "lmml"
+path = "src/main.rs"
