@@ -134,3 +134,15 @@ pub fn main() {
 ## `lmml-cli`クレート
 
 LMMLを演奏したり他の形式に変換するためのコマンドラインツールです。
+
+### インストール方法
+
+```sh
+cargo install lmml-cli
+```
+
+### 使用方法
+
+```sh
+lmml --help
+```
