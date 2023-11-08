@@ -1,3 +1,4 @@
+#[derive(Debug, PartialEq, Clone)]
 pub enum LmmlAst {
     Note {
         note: NoteChar,
@@ -13,6 +14,7 @@ pub enum LmmlAst {
     DecreaseOctave,
 }
 
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum NoteChar {
     C,
     D,
@@ -23,6 +25,7 @@ pub enum NoteChar {
     B,
 }
 
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum NoteModifier {
     Sharp,
     Flat,
