@@ -1,5 +1,5 @@
 #[derive(Debug, PartialEq, Clone)]
-pub struct Lmml {
+pub struct LmmlTimeline {
     pub timeline: Vec<Element>,
 }
 
@@ -17,7 +17,7 @@ pub struct Note {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum NoteType {
-    Single { hz: f64, volume: u32 },
+    Single { hz: f64, volume: f32 },
     Rest,
 }
 

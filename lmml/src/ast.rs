@@ -1,8 +1,15 @@
 #[derive(Debug, PartialEq, Clone)]
-pub enum LmmlAst {
+pub struct LmmlAst(pub Vec<LmmlCommand>);
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum LmmlCommand {
     Note {
         note: NoteChar,
         modifier: NoteModifier,
+        length: Option<u32>,
+        is_dotted: bool,
+    },
+    Rest {
         length: Option<u32>,
         is_dotted: bool,
     },
