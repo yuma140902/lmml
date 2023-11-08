@@ -10,3 +10,4 @@ members = [
 version = "0.0.0"
 authors = ["yuma14"]
 repository = "https://github.com/yuma140902/lmml"
+license = "MIT OR Apache-2.0"
