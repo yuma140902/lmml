@@ -7,29 +7,16 @@ pub enum Element {
     Event(Event),
 }
 
-pub enum Note {
-    Single(SingleNote),
-    Rest(Rest),
+pub struct Note {
+    pub length_ms: u32,
+    pub note_type: NoteType,
 }
 
-pub struct SingleNote {
-    pub length_ms: u32,
-    pub hz: f64,
-    pub volume: u32,
-}
-
-pub struct Rest {
-    pub length_ms: u32,
+pub enum NoteType {
+    Single { hz: f64, volume: u32 },
+    Rest,
 }
 
 pub enum Event {
-    Tempo(u32),
-    Tone(Tone),
-}
-
-pub enum Tone {
-    Sine,
-    Square,
-    Saw,
-    Triangle,
+    ChangeTempo(u32),
 }
