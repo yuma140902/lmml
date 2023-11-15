@@ -1,7 +1,6 @@
 use lmml::ast::{LmmlAst, LmmlCommand, NoteChar, NoteModifier};
 use nom::{
     branch::alt,
-    bytes::complete::is_not,
     character::complete::{char, multispace0, none_of, one_of},
     combinator::{eof, map, opt, value},
     error::ParseError,
@@ -15,7 +14,7 @@ pub fn parse_lmml_until_eof(input: &str) -> IResult<&str, LmmlAst> {
 }
 
 pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst> {
-    map(many0(ws(parse_command)), |commands| LmmlAst(commands))(input)
+    map(many0(ws(parse_command)), LmmlAst)(input)
 }
 
 pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {

@@ -6,7 +6,7 @@ mod parsers;
 pub fn remove_comments(input: &str) -> String {
     let mut v = Vec::new();
     for line in input.lines() {
-        if line.trim_start().starts_with(";") {
+        if line.trim_start().starts_with(';') {
             continue;
         }
         v.push(line);
