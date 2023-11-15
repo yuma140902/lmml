@@ -36,7 +36,7 @@ fn main() -> anyhow::Result<()> {
                     for _ in 0..pos {
                         eprint!(" ");
                     }
-                    eprintln!("^");
+                    eprintln!("^ {} 文字目", pos);
                 }
             }
             anyhow::bail!("LMMLに構文エラーがあります")
