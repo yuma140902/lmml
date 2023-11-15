@@ -12,10 +12,7 @@ fn main() -> anyhow::Result<()> {
     println!("lmml:");
     println!("{}", args.lmml);
     println!();
-    println!("remove comments:");
     let input = lmml_parser::remove_comments(&args.lmml);
-    println!("Input: {}", input);
-    println!();
 
     let ast = lmml_parser::parse_lmml(&input);
 
