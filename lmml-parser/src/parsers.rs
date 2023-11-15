@@ -62,8 +62,8 @@ pub fn parse_octave_command(input: &str) -> IResult<&str, LmmlCommand> {
 }
 
 pub fn parse_length_command(input: &str) -> IResult<&str, LmmlCommand> {
-    map(preceded(one_of("Ll"), parse_number), |n| {
-        LmmlCommand::SetLength(n)
+    map(preceded(one_of("Ll"), parse_length), |(n, d)| {
+        LmmlCommand::SetLength(n, d)
     })(input)
 }
 
