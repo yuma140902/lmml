@@ -5,13 +5,15 @@ use super::SAMPLE_RATE;
 pub struct SawWave {
     frame: usize,
     pub frequency: f32,
+    pub amplitude: f32,
 }
 
 impl SawWave {
-    pub fn new(frequency: f32) -> Self {
+    pub fn new(frequency: f32, amplitude: f32) -> Self {
         Self {
             frame: 0,
             frequency,
+            amplitude,
         }
     }
 }
@@ -42,6 +44,10 @@ impl Iterator for SawWave {
         if self.frame > (SAMPLE_RATE as f32 / self.frequency) as usize {
             self.frame = 0;
         }
-        Some((self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency as f32) - 0.5_f32) * 0.1)
+        Some(
+            (self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency as f32) - 0.5)
+                * 2.0
+                * self.amplitude,
+        )
     }
 }

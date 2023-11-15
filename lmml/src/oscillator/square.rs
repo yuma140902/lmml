@@ -5,14 +5,16 @@ use super::SAMPLE_RATE;
 pub struct SquareWave {
     frame: usize,
     pub frequency: f32,
+    pub amplitude: f32,
     pub pulse_width: f32,
 }
 
 impl SquareWave {
-    pub fn new(frequency: f32, pulse_width: f32) -> Self {
+    pub fn new(frequency: f32, amplitude: f32, pulse_width: f32) -> Self {
         Self {
             frame: 0,
             frequency,
+            amplitude,
             pulse_width,
         }
     }
@@ -45,9 +47,9 @@ impl Iterator for SquareWave {
             self.frame = 0;
         }
         if self.frame < ((SAMPLE_RATE as f32 / self.frequency) * self.pulse_width) as usize {
-            Some(0.1)
+            Some(self.amplitude)
         } else {
-            Some(-0.1)
+            Some(-self.amplitude)
         }
     }
 }
