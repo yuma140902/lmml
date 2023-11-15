@@ -53,13 +53,13 @@ mod triangle {
             }
             if self.frame < ((SAMPLE_RATE as f32 / self.frequency) * 0.5) as usize {
                 Some(
-                    (2.0 * self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency as f32) - 0.5)
+                    (2.0 * self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency) - 0.5)
                         * 2.0
                         * self.amplitude,
                 )
             } else {
                 Some(
-                    (1.5 - 2.0 * self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency as f32))
+                    (1.5 - 2.0 * self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency))
                         * 2.0
                         * self.amplitude,
                 )

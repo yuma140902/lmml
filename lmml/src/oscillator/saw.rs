@@ -45,7 +45,7 @@ impl Iterator for SawWave {
             self.frame = 0;
         }
         Some(
-            (self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency as f32) - 0.5)
+            (self.frame as f32 / (SAMPLE_RATE as f32 / self.frequency) - 0.5)
                 * 2.0
                 * self.amplitude,
         )
