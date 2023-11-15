@@ -26,7 +26,7 @@ fn main() {
     if let Ok((_, ast)) = ast {
         let timeline = ast.to_timeline();
         println!("=== Timeline ===");
-        println!("{:#?}", timeline);
+        println!("{}", timeline);
 
         let (_stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
         let sink = rodio::Sink::try_new(&stream_handle).unwrap();

@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{fmt::Display, time::Duration};
 
 use rodio::{Sink, Source};
 
@@ -54,5 +54,33 @@ impl LmmlTimeline {
                 },
             }
         }
+    }
+}
+
+impl Display for LmmlTimeline {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for element in self.timeline.iter() {
+            match element {
+                Element::Note(note) => match note.note_type {
+                    NoteType::Single { hz, volume } => {
+                        write!(
+                            f,
+                            "Note: {} Hz, {} ms, {} volume",
+                            hz, note.length_ms, volume
+                        )?;
+                    }
+                    NoteType::Rest => {
+                        write!(f, "Rest: {} ms", note.length_ms)?;
+                    }
+                },
+                Element::Event(event) => match event {
+                    Event::ChangeTempo(tempo) => {
+                        write!(f, "Event ChangeTempo: {}", tempo)?;
+                    }
+                },
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }
