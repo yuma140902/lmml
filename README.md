@@ -7,6 +7,7 @@ LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
 ```
 <lmml>       := <operator>*
 <operator>   := <note>
+              | <n-cmd>
               | <rest>
               | <set-octave>
               | <set-length>
@@ -21,6 +22,7 @@ LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
 <rest>       := 'R' <length>? | 'r' <length>?
 <length>     := <number> <dot>?
 <dot>        := '.'
+<n-cmd>      := 'N' <number> | 'n' <number>
 <set-ocatve> := 'O' <number> | 'o' <number>
 <set-length> := 'L' <length> | 'l' <length>
 <set-volume> := 'V' <number> | 'v' <number>
@@ -77,6 +79,10 @@ LMMLにはいくつかのコマンドが存在します。それらのコマン�
 ### `<`コマンド
 
 オクターブの値を1減らします。
+
+### `N`コマンド
+
+MIDIのノート番号(0～96)で音符を指定します。音符コマンドとの対応関係については[MIDIノート番号と音名、周波数の対応表](https://www.asahi-net.or.jp/~hb9t-ktd/music/Japan/Research/DTM/freq_map.html)などを参照してください。
 
 ### `V`コマンド
 

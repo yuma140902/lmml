@@ -15,6 +15,7 @@ pub enum LmmlCommand {
         length: Option<u32>,
         is_dotted: bool,
     },
+    NoteNumber(u32),
     SetOctave(u32),
     SetLength(u32, bool),
     SetVolume(u32),
@@ -80,6 +81,15 @@ impl LmmlAst {
                         length_to_ms(tempo, length, current_is_dotted)
                     },
                 })),
+                LmmlCommand::NoteNumber(n) => {
+                    elements.push(Element::Note(Note {
+                        note_type: NoteType::Single {
+                            hz: notenumber_to_hz(*n as i32),
+                            volume: volume as f32,
+                        },
+                        length_ms: length_to_ms(tempo, length, current_is_dotted),
+                    }));
+                }
                 LmmlCommand::SetOctave(o) => octave = *o as i32,
                 LmmlCommand::SetLength(l, d) => {
                     length = *l;
@@ -108,7 +118,7 @@ fn length_to_ms(tempo: u32, length: u32, is_dotted: bool) -> u32 {
 impl NoteChar {
     pub fn to_hz(&self, modifier: NoteModifier, octave: i32) -> f32 {
         let notenumber = self.to_notenumber(modifier, octave);
-        440.0 * 2.0_f32.powf((notenumber - 69) as f32 / 12.0)
+        notenumber_to_hz(notenumber)
     }
 
     pub fn to_notenumber(&self, modifier: NoteModifier, octave: i32) -> i32 {
@@ -128,6 +138,10 @@ impl NoteChar {
         };
         base + modifier + ((octave + 1) * 12)
     }
+}
+
+pub fn notenumber_to_hz(notenumber: i32) -> f32 {
+    440.0 * 2.0_f32.powf((notenumber - 69) as f32 / 12.0)
 }
 
 #[cfg(test)]
