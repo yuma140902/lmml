@@ -20,6 +20,7 @@ pub enum LmmlCommand {
     SetLength(u32, bool),
     SetVolume(u32),
     SetTempo(u32),
+    SetWaveform(u32),
     IncreaseOctave,
     DecreaseOctave,
 }
@@ -50,6 +51,7 @@ impl LmmlAst {
         let mut current_is_dotted = false;
         let mut tempo = 120;
         let mut volume = 10;
+        let mut waveform = 0;
 
         elements.push(Element::Event(Event::ChangeTempo(tempo)));
         for command in self.0.iter() {
@@ -63,6 +65,7 @@ impl LmmlAst {
                     note_type: NoteType::Single {
                         hz: note.to_hz(*modifier, octave),
                         volume: volume as f32,
+                        waveform,
                     },
                     length_ms: if let Some(l) = l {
                         length_to_ms(tempo, *l, *is_dotted)
@@ -86,6 +89,7 @@ impl LmmlAst {
                         note_type: NoteType::Single {
                             hz: notenumber_to_hz(*n as i32),
                             volume: volume as f32,
+                            waveform,
                         },
                         length_ms: length_to_ms(tempo, length, current_is_dotted),
                     }));
@@ -100,6 +104,7 @@ impl LmmlAst {
                     tempo = *t;
                     elements.push(Element::Event(Event::ChangeTempo(*t)));
                 }
+                LmmlCommand::SetWaveform(n) => waveform = *n,
                 LmmlCommand::IncreaseOctave => octave += 1,
                 LmmlCommand::DecreaseOctave => octave -= 1,
             }

@@ -13,6 +13,7 @@ LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
               | <set-length>
               | <set-volume>
               | <set-tempo>
+              | <set-wave>
               | <inc-octave>
               | <dec-octave>
 <note>       := <note-char> <modifier>? <length>?
@@ -27,6 +28,7 @@ LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
 <set-length> := 'L' <length> | 'l' <length>
 <set-volume> := 'V' <number> | 'v' <number>
 <set-tempo>  := 'T' <number> | 't' <number>
+<set-wave>   := '@' <number>
 <inc-octave> := '>'
 <dec-octave> := '<'
 <number>     := <digit>+
@@ -91,6 +93,18 @@ MIDIのノート番号(0～96)で音符を指定します。音符コマンド�
 ### `T`コマンド
 
 テンポをセットします。値は1分間に四分音符が鳴る回数を表します。初期値は120です。
+
+### `@`コマンド
+
+0～4の数字で波形を設定します。デフォルト値は0です。
+
+| 数字 | 波形       |
+|------|------------|
+| 0    | ノコギリ波 |
+| 1    | 矩形波     |
+| 2    | パルス波   |
+| 3    | 三角波     |
+| 4    | 正弦波     |
 
 ## `lmml`クレート
 
