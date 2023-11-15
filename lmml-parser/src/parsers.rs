@@ -21,6 +21,7 @@ pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
     alt((
         parse_note_command,
         parse_rest_command,
+        parse_n_command,
         parse_octave_command,
         parse_length_command,
         parse_volume_command,
@@ -52,6 +53,12 @@ pub fn parse_rest_command(input: &str) -> IResult<&str, LmmlCommand> {
         let length = len.map(|l| l.0);
         let is_dotted = len.map(|l| l.1).unwrap_or(false);
         LmmlCommand::Rest { length, is_dotted }
+    })(input)
+}
+
+pub fn parse_n_command(input: &str) -> IResult<&str, LmmlCommand> {
+    map(preceded(one_of("Nn"), parse_number), |n| {
+        LmmlCommand::NoteNumber(n)
     })(input)
 }
 
