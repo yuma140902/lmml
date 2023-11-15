@@ -1,4 +1,4 @@
-use crate::timeline::{Element, LmmlTimeline, Note, NoteType};
+use crate::timeline::{Element, Event, LmmlTimeline, Note, NoteType};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlAst(pub Vec<LmmlCommand>);
@@ -49,6 +49,7 @@ impl LmmlAst {
         let mut tempo = 120;
         let mut volume = 10;
 
+        elements.push(Element::Event(Event::ChangeTempo(tempo)));
         for command in self.0.iter() {
             match command {
                 LmmlCommand::Note {
@@ -73,7 +74,10 @@ impl LmmlAst {
                 LmmlCommand::SetOctave(o) => octave = *o as i32,
                 LmmlCommand::SetLength(l) => length = *l,
                 LmmlCommand::SetVolume(v) => volume = *v,
-                LmmlCommand::SetTempo(t) => tempo = *t,
+                LmmlCommand::SetTempo(t) => {
+                    tempo = *t;
+                    elements.push(Element::Event(Event::ChangeTempo(*t)));
+                }
                 LmmlCommand::IncreaseOctave => octave += 1,
                 LmmlCommand::DecreaseOctave => octave -= 1,
             }

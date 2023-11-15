@@ -27,5 +27,10 @@ fn main() {
         let timeline = ast.to_timeline();
         println!("=== Timeline ===");
         println!("{:#?}", timeline);
+
+        let (_stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
+        let sink = rodio::Sink::try_new(&stream_handle).unwrap();
+        timeline.play(&sink);
+        sink.sleep_until_end();
     }
 }
