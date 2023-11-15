@@ -16,7 +16,7 @@ pub enum LmmlCommand {
         is_dotted: bool,
     },
     SetOctave(u32),
-    SetLength(u32),
+    SetLength(u32, bool),
     SetVolume(u32),
     SetTempo(u32),
     IncreaseOctave,
@@ -46,6 +46,7 @@ impl LmmlAst {
         let mut elements = Vec::new();
         let mut octave = 4;
         let mut length = 4;
+        let mut current_is_dotted = false;
         let mut tempo = 120;
         let mut volume = 10;
 
@@ -62,17 +63,28 @@ impl LmmlAst {
                         hz: note.to_hz(*modifier, octave),
                         volume: volume as f32,
                     },
-                    length_ms: length_to_ms(tempo, l.unwrap_or(length), *is_dotted),
+                    length_ms: if let Some(l) = l {
+                        length_to_ms(tempo, *l, *is_dotted)
+                    } else {
+                        length_to_ms(tempo, length, current_is_dotted)
+                    },
                 })),
                 LmmlCommand::Rest {
                     length: l,
                     is_dotted,
                 } => elements.push(Element::Note(Note {
                     note_type: NoteType::Rest,
-                    length_ms: length_to_ms(tempo, l.unwrap_or(length), *is_dotted),
+                    length_ms: if let Some(l) = l {
+                        length_to_ms(tempo, *l, *is_dotted)
+                    } else {
+                        length_to_ms(tempo, length, current_is_dotted)
+                    },
                 })),
                 LmmlCommand::SetOctave(o) => octave = *o as i32,
-                LmmlCommand::SetLength(l) => length = *l,
+                LmmlCommand::SetLength(l, d) => {
+                    length = *l;
+                    current_is_dotted = *d;
+                }
                 LmmlCommand::SetVolume(v) => volume = *v,
                 LmmlCommand::SetTempo(t) => {
                     tempo = *t;
@@ -89,8 +101,8 @@ impl LmmlAst {
 
 fn length_to_ms(tempo: u32, length: u32, is_dotted: bool) -> u32 {
     let length = length as f32;
-    let length = if is_dotted { length * 1.5 } else { length };
-    (4.0 / length * 60.0 / tempo as f32 * 1000.0) as u32
+    let dot = if is_dotted { 1.5 } else { 1.0 };
+    ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
 }
 
 impl NoteChar {

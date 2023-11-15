@@ -22,7 +22,7 @@ LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
 <length>     := <number> <dot>?
 <dot>        := '.'
 <set-ocatve> := 'O' <number> | 'o' <number>
-<set-length> := 'L' <number> | 'l' <number>
+<set-length> := 'L' <length> | 'l' <length>
 <set-volume> := 'V' <number> | 'v' <number>
 <set-tempo>  := 'T' <number> | 't' <number>
 <inc-octave> := '>'
@@ -65,8 +65,6 @@ LMMLにはいくつかのコマンドが存在します。それらのコマン�
 ### `L`コマンド
 
 音符の長さをセットします。音符コマンドの後に数字をつけなかった場合はこのコマンドの値が使用されます。詳細は音符コマンドの節を参照してください。
-
-なお、`L`コマンドに`.`をつけることはできません。
 
 ### `O`コマンド
 
