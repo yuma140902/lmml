@@ -36,7 +36,11 @@ fn main() -> anyhow::Result<()> {
                     for _ in 0..pos {
                         eprint!(" ");
                     }
-                    eprintln!("^ {} 文字目", pos);
+                    eprintln!(
+                        "^ {} 文字目({})",
+                        pos,
+                        e.input.chars().next().unwrap_or(' ')
+                    );
                 }
             }
             anyhow::bail!("LMMLに構文エラーがあります")
