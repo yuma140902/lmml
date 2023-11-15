@@ -34,8 +34,8 @@ fn main() -> anyhow::Result<()> {
                         eprint!(" ");
                     }
                     eprintln!(
-                        "^ {} 文字目({})",
-                        pos,
+                        "^ {} 文字目 ('{}')",
+                        pos + 1,
                         e.input.chars().next().unwrap_or(' ')
                     );
                 }
