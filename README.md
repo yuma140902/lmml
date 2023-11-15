@@ -2,6 +2,50 @@
 
 LMML (**L**MML **M**usic **M**acro **L**anguage) は MML の方言です。
 
+## 演奏例
+
+https://github.com/yuma140902/lmml/assets/23431077/68d973a6-c464-42ff-9d12-973f493445f5
+
+```
+; Bad Apple!! feat. nomico
+
+t320 l4
+
+@0 v2
+<ab>cd e4.r8ag e4.r8<a4.r8> edc<b>
+<ab>cd e4.r8dc <bab>c <bagb>
+<ab>cd e4.r8ag e4.r8<a4.r8> edc<b>
+<ab>cd e4.r8dc <b4.r8>c4.r8 d4.r8e4.r8
+
+@1 v1
+<ab>cd e4.r8ag e4.r8<a4.r8> edc<b>
+<ab>cd e4.r8dc <bab>c <bagb>
+<ab>cd e4.r8ag e4.r8<a4.r8> edc<b>
+<ab>cd e4.r8dc <b4.r8>c4.r8 d4.r8e4.r8
+
+@3 v3
+gaed e4.r8de gaed e4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+egga ede4.r8 dega ede4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+
+@4 v4
+egga ede4.r8 dega ede4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+egga ede4.r8 dega ede4.r8
+ab>c<b age4.r8 dedc <bga4.r8>
+
+@0 v2
+egga ede4.r8 dega ede4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+egga ede4.r8 dega ede4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+egga ede4.r8 dega ede4.r8
+dedc <bga4.r8 gab>c de<a4.r8>
+egga ede4.r8 dega ede4.r8
+ab>c<b age4.r8 dedc <bga4.r8
+```
+
 ## LMMLの文法
 
 ```
