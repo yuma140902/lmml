@@ -60,16 +60,15 @@ ab>c<b age4.r8 dedc <bga4.r8
               | <set-wave>
               | <inc-octave>
               | <dec-octave>
-<note-cmd>   := <note-char> <modifier>? <length>?
+<note-cmd>   := <note-char> <modifier>? <number>? <dot>?
 <note-char>  := 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B'
               | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b'
 <modifier>   := '+' | '-'
-<rest-cmd>   := 'R' <length>? | 'r' <length>?
-<length>     := <number> <dot>?
+<rest-cmd>   := 'R' <number>? <dot>? | 'r' <number>? <dot>?
 <dot>        := '.'
 <n-cmd>      := 'N' <number> | 'n' <number>
 <set-ocatve> := 'O' <number> | 'o' <number>
-<set-length> := 'L' <length> | 'l' <length>
+<set-length> := 'L' <number> <dot>? | 'l' <number> <dot>?
 <set-volume> := 'V' <number> | 'v' <number>
 <set-tempo>  := 'T' <number> | 't' <number>
 <set-wave>   := '@' <number>
