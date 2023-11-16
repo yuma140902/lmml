@@ -43,6 +43,22 @@ pub enum NoteModifier {
     Natural,
 }
 
+fn resolve_length(l_cmd_num: u32, l_cmd_dot: bool, num: Option<u32>, dot: bool) -> (u32, bool) {
+    let m = l_cmd_num;
+    match (l_cmd_dot, num, dot) {
+        (false, None, d) => (m, d),
+        (false, Some(n), d) => (n, d),
+        (true, None, _) => (m, true),
+        (true, Some(n), d) => (n, d),
+    }
+}
+
+fn length_to_ms(tempo: u32, (length, is_dotted): (u32, bool)) -> u32 {
+    let length = length as f32;
+    let dot = if is_dotted { 1.5 } else { 1.0 };
+    ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
+}
+
 impl LmmlAst {
     pub fn to_timeline(&self) -> LmmlTimeline {
         let mut elements = Vec::new();
@@ -67,22 +83,20 @@ impl LmmlAst {
                         volume: volume as f32,
                         waveform,
                     },
-                    length_ms: if let Some(l) = l {
-                        length_to_ms(tempo, *l, *is_dotted)
-                    } else {
-                        length_to_ms(tempo, length, current_is_dotted)
-                    },
+                    length_ms: length_to_ms(
+                        tempo,
+                        resolve_length(length, current_is_dotted, *l, *is_dotted),
+                    ),
                 })),
                 LmmlCommand::Rest {
                     length: l,
                     is_dotted,
                 } => elements.push(Element::Note(Note {
                     note_type: NoteType::Rest,
-                    length_ms: if let Some(l) = l {
-                        length_to_ms(tempo, *l, *is_dotted)
-                    } else {
-                        length_to_ms(tempo, length, current_is_dotted)
-                    },
+                    length_ms: length_to_ms(
+                        tempo,
+                        resolve_length(length, current_is_dotted, *l, *is_dotted),
+                    ),
                 })),
                 LmmlCommand::NoteNumber(n) => {
                     elements.push(Element::Note(Note {
@@ -91,7 +105,7 @@ impl LmmlAst {
                             volume: volume as f32,
                             waveform,
                         },
-                        length_ms: length_to_ms(tempo, length, current_is_dotted),
+                        length_ms: length_to_ms(tempo, (length, current_is_dotted)),
                     }));
                 }
                 LmmlCommand::SetOctave(o) => octave = *o as i32,
@@ -112,12 +126,6 @@ impl LmmlAst {
 
         LmmlTimeline { timeline: elements }
     }
-}
-
-fn length_to_ms(tempo: u32, length: u32, is_dotted: bool) -> u32 {
-    let length = length as f32;
-    let dot = if is_dotted { 1.5 } else { 1.0 };
-    ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
 }
 
 impl NoteChar {

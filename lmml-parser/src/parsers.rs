@@ -34,10 +34,13 @@ pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
 
 pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand> {
     map(
-        tuple((parse_note_char, opt(parse_modifier), opt(parse_length))),
-        |(note, modifier, len)| {
-            let length = len.map(|l| l.0);
-            let is_dotted = len.map(|l| l.1).unwrap_or(false);
+        tuple((
+            parse_note_char,
+            opt(parse_modifier),
+            opt(parse_number),
+            parse_dot,
+        )),
+        |(note, modifier, length, is_dotted)| {
             let modifier = modifier.unwrap_or(NoteModifier::Natural);
             LmmlCommand::Note {
                 note,
@@ -50,11 +53,10 @@ pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand> {
 }
 
 pub fn parse_rest_command(input: &str) -> IResult<&str, LmmlCommand> {
-    map(preceded(one_of("Rr"), opt(parse_length)), |len| {
-        let length = len.map(|l| l.0);
-        let is_dotted = len.map(|l| l.1).unwrap_or(false);
-        LmmlCommand::Rest { length, is_dotted }
-    })(input)
+    map(
+        preceded(one_of("Rr"), pair(opt(parse_number), parse_dot)),
+        |(length, is_dotted)| LmmlCommand::Rest { length, is_dotted },
+    )(input)
 }
 
 pub fn parse_n_command(input: &str) -> IResult<&str, LmmlCommand> {
@@ -70,9 +72,10 @@ pub fn parse_octave_command(input: &str) -> IResult<&str, LmmlCommand> {
 }
 
 pub fn parse_length_command(input: &str) -> IResult<&str, LmmlCommand> {
-    map(preceded(one_of("Ll"), parse_length), |(n, d)| {
-        LmmlCommand::SetLength(n, d)
-    })(input)
+    map(
+        preceded(one_of("Ll"), pair(parse_number, parse_dot)),
+        |(n, d)| LmmlCommand::SetLength(n, d),
+    )(input)
 }
 
 pub fn parse_volume_command(input: &str) -> IResult<&str, LmmlCommand> {
@@ -122,10 +125,6 @@ pub fn parse_modifier(input: &str) -> IResult<&str, NoteModifier> {
         '-' => NoteModifier::Flat,
         _ => panic!(),
     })(input)
-}
-
-pub fn parse_length(input: &str) -> IResult<&str, (u32, bool)> {
-    pair(parse_number, parse_dot)(input)
 }
 
 pub fn parse_dot(input: &str) -> IResult<&str, bool> {
