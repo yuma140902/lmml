@@ -66,7 +66,7 @@ impl LmmlAst {
         let mut length = 4;
         let mut current_is_dotted = false;
         let mut tempo = 120;
-        let mut volume = 10;
+        let mut volume = 20;
         let mut waveform = 0;
 
         elements.push(Element::Event(Event::ChangeTempo(tempo)));

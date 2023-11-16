@@ -43,27 +43,27 @@ impl LmmlTimeline {
                         waveform,
                     } => {
                         if waveform == 1 {
-                            let mut source = SquareWave::new(hz, 0.1 * volume, 0.5)
+                            let mut source = SquareWave::new(hz, 0.01 * volume, 0.5)
                                 .take_duration(Duration::from_millis(note.length_ms as u64));
                             source.set_filter_fadeout();
                             sink.append(source);
                         } else if waveform == 2 {
-                            let mut source = SquareWave::new(hz, 0.1 * volume, 0.1)
+                            let mut source = SquareWave::new(hz, 0.01 * volume, 0.1)
                                 .take_duration(Duration::from_millis(note.length_ms as u64));
                             source.set_filter_fadeout();
                             sink.append(source);
                         } else if waveform == 3 {
-                            let mut source = TriangleWave::new(hz, 0.1 * volume)
+                            let mut source = TriangleWave::new(hz, 0.01 * volume)
                                 .take_duration(Duration::from_millis(note.length_ms as u64));
                             source.set_filter_fadeout();
                             sink.append(source);
                         } else if waveform == 4 {
-                            let mut source = SineWave::new(hz, 0.1 * volume)
+                            let mut source = SineWave::new(hz, 0.01 * volume)
                                 .take_duration(Duration::from_millis(note.length_ms as u64));
                             source.set_filter_fadeout();
                             sink.append(source);
                         } else {
-                            let mut source = SawWave::new(hz, 0.1 * volume)
+                            let mut source = SawWave::new(hz, 0.01 * volume)
                                 .take_duration(Duration::from_millis(note.length_ms as u64));
                             source.set_filter_fadeout();
                             sink.append(source);
