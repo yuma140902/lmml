@@ -11,8 +11,6 @@ https://github.com/yuma140902/lmml/assets/23431077/dfad8777-ade5-4591-8804-a3968
 
 t320 l4
 
-crrrrr
-
 @0 v15
 <ab>cd e.r8ag e.r8<a.r8> edc<b>
 <ab>cd e.r8dc <bab>c <bagb>
