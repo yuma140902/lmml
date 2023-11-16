@@ -2,7 +2,7 @@ use std::{fmt::Display, time::Duration};
 
 use rodio::{Sink, Source};
 
-use crate::oscillator::{self, SawWave, SineWave, SquareWave, TriangleWave, SAMPLE_RATE};
+use crate::oscillator::{MixedWave, Wave, Waveform, SAMPLE_RATE};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlTimeline {
@@ -23,7 +23,16 @@ pub struct Note {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum NoteType {
-    Single { hz: f32, volume: f32, waveform: u32 },
+    Single {
+        hz: f32,
+        volume: f32,
+        waveform: u32,
+    },
+    Chord {
+        hzs: Vec<f32>,
+        volume: f32,
+        waveform: u32,
+    },
     Rest,
 }
 
@@ -42,32 +51,39 @@ impl LmmlTimeline {
                         volume,
                         waveform,
                     } => {
-                        if waveform == 1 {
-                            let mut source = SquareWave::new(hz, 0.01 * volume, 0.5)
-                                .take_duration(Duration::from_millis(note.length_ms as u64));
-                            source.set_filter_fadeout();
-                            sink.append(source);
-                        } else if waveform == 2 {
-                            let mut source = SquareWave::new(hz, 0.01 * volume, 0.1)
-                                .take_duration(Duration::from_millis(note.length_ms as u64));
-                            source.set_filter_fadeout();
-                            sink.append(source);
-                        } else if waveform == 3 {
-                            let mut source = TriangleWave::new(hz, 0.01 * volume)
-                                .take_duration(Duration::from_millis(note.length_ms as u64));
-                            source.set_filter_fadeout();
-                            sink.append(source);
-                        } else if waveform == 4 {
-                            let mut source = SineWave::new(hz, 0.01 * volume)
-                                .take_duration(Duration::from_millis(note.length_ms as u64));
-                            source.set_filter_fadeout();
-                            sink.append(source);
-                        } else {
-                            let mut source = SawWave::new(hz, 0.01 * volume)
-                                .take_duration(Duration::from_millis(note.length_ms as u64));
-                            source.set_filter_fadeout();
-                            sink.append(source);
-                        }
+                        let waveform = match waveform {
+                            1 => Waveform::Square(0.5),
+                            2 => Waveform::Square(0.1),
+                            3 => Waveform::Triangle,
+                            4 => Waveform::Sine,
+                            _ => Waveform::Saw,
+                        };
+
+                        let mut source = Wave::new(waveform, hz, 0.01 * volume)
+                            .take_duration(Duration::from_millis(note.length_ms as u64));
+                        source.set_filter_fadeout();
+                        sink.append(source);
+                    }
+                    NoteType::Chord {
+                        ref hzs,
+                        volume,
+                        waveform,
+                    } => {
+                        let waveform = match waveform {
+                            1 => Waveform::Square(0.5),
+                            2 => Waveform::Square(0.1),
+                            3 => Waveform::Triangle,
+                            4 => Waveform::Sine,
+                            _ => Waveform::Saw,
+                        };
+                        let mut source = MixedWave::new(
+                            hzs.iter()
+                                .map(|hz| Wave::new(waveform, *hz, 0.01 * volume))
+                                .collect(),
+                        )
+                        .take_duration(Duration::from_millis(note.length_ms as u64));
+                        source.set_filter_fadeout();
+                        sink.append(source);
                     }
                     NoteType::Rest => {
                         let source = rodio::source::Zero::<f32>::new(1, SAMPLE_RATE)
@@ -97,6 +113,21 @@ impl Display for LmmlTimeline {
                             f,
                             "Note: {} Hz, {} ms, volume {}, waveform {}",
                             hz, note.length_ms, volume, waveform
+                        )?;
+                    }
+                    NoteType::Chord {
+                        ref hzs,
+                        volume,
+                        waveform,
+                    } => {
+                        write!(f, "Chord: [")?;
+                        for hz in hzs {
+                            write!(f, "{} ", hz)?;
+                        }
+                        write!(
+                            f,
+                            "] Hz, {} ms, volume {}, waveform {}",
+                            note.length_ms, volume, waveform
                         )?;
                     }
                     NoteType::Rest => {

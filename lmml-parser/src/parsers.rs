@@ -21,6 +21,7 @@ pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
     alt((
         parse_note_command,
         parse_rest_command,
+        parse_chord_command,
         parse_n_command,
         parse_octave_command,
         parse_length_command,
@@ -48,6 +49,28 @@ pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand> {
                 length,
                 is_dotted,
             }
+        },
+    )(input)
+}
+
+pub fn parse_chord_command(input: &str) -> IResult<&str, LmmlCommand> {
+    map(
+        tuple((
+            delimited(
+                char('['),
+                many1(pair(parse_note_char, opt(parse_modifier))),
+                char(']'),
+            ),
+            opt(parse_number),
+            parse_dot,
+        )),
+        |(notes, length, is_dotted)| LmmlCommand::Chord {
+            notes: notes
+                .into_iter()
+                .map(|(n, m)| (n, m.unwrap_or(NoteModifier::Natural)))
+                .collect(),
+            length,
+            is_dotted,
         },
     )(input)
 }

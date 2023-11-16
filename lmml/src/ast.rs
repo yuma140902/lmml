@@ -15,6 +15,11 @@ pub enum LmmlCommand {
         length: Option<u32>,
         is_dotted: bool,
     },
+    Chord {
+        notes: Vec<(NoteChar, NoteModifier)>,
+        length: Option<u32>,
+        is_dotted: bool,
+    },
     NoteNumber(u32),
     SetOctave(u32),
     SetLength(u32, bool),
@@ -93,6 +98,21 @@ impl LmmlAst {
                     is_dotted,
                 } => elements.push(Element::Note(Note {
                     note_type: NoteType::Rest,
+                    length_ms: length_to_ms(
+                        tempo,
+                        resolve_length(length, current_is_dotted, *l, *is_dotted),
+                    ),
+                })),
+                LmmlCommand::Chord {
+                    notes,
+                    length: l,
+                    is_dotted,
+                } => elements.push(Element::Note(Note {
+                    note_type: NoteType::Chord {
+                        hzs: notes.iter().map(|(n, m)| n.to_hz(*m, octave)).collect(),
+                        volume: volume as f32,
+                        waveform,
+                    },
                     length_ms: length_to_ms(
                         tempo,
                         resolve_length(length, current_is_dotted, *l, *is_dotted),
