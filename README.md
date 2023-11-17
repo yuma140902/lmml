@@ -68,7 +68,7 @@ ab>c<b age.r8 dedc <bga.r8
               | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b'
 <modifier>   := '+' | '-'
 <rest-cmd>   := 'R' <number>? <dot>? | 'r' <number>? <dot>?
-<chord>      := '[' <note-char>+ ']' <number>? <dot>?
+<chord>      := '[' (<note-char> <modifier>?)+ ']' <number>? <dot>?
 <dot>        := '.'
 <n-cmd>      := 'N' <number> | 'n' <number>
 <set-ocatve> := 'O' <number> | 'o' <number>
