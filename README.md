@@ -68,7 +68,7 @@ ab>c<b age.r8 dedc <bga.r8
               | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b'
 <modifier>   := '+' | '-'
 <rest-cmd>   := 'R' <number>? <dot>? | 'r' <number>? <dot>?
-<chord>      := '[' <note-char>+ ']' <number>? <dot>?
+<chord>      := '[' (<note-char> <modifier>?)+ ']' <number>? <dot>?
 <dot>        := '.'
 <n-cmd>      := 'N' <number> | 'n' <number>
 <set-ocatve> := 'O' <number> | 'o' <number>
@@ -119,9 +119,16 @@ LMMLにはいくつかのコマンドが存在します。それらのコマン�
 
 #### 例
 
-- `[ceg]` - C Major
+- `[ceg]` - C Maj
 - `[ace]` - Am
 - `[ga+df]` - Gm7
+
+```
+; カノン進行 C/G - G - Am/E - Em - F/C - C - F/C - G/D
+@4t40 [gce][gbd][eac][egb][cfa][ceg][cfa][dgb]
+```
+
+https://github.com/yuma140902/lmml/assets/23431077/9f5b72ed-5317-4cdf-bf3a-d028d05c7cd5
 
 ### `L`コマンド
 
