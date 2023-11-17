@@ -114,7 +114,6 @@ fn main() -> anyhow::Result<()> {
                 println!("=== Timeline ===");
                 println!("{}", timeline);
                 timeline.play(&sink);
-                sink.sleep_until_end();
             }
         }
     }
