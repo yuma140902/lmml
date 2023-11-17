@@ -28,6 +28,7 @@ pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
         parse_volume_command,
         parse_tempo_command,
         parse_waveform_command,
+        parse_channel_command,
         parse_inc_octave_command,
         parse_dec_octave_command,
     ))(input)
@@ -116,6 +117,12 @@ pub fn parse_tempo_command(input: &str) -> IResult<&str, LmmlCommand> {
 pub fn parse_waveform_command(input: &str) -> IResult<&str, LmmlCommand> {
     map(preceded(char('@'), parse_number), |n| {
         LmmlCommand::SetWaveform(n)
+    })(input)
+}
+
+pub fn parse_channel_command(input: &str) -> IResult<&str, LmmlCommand> {
+    map(preceded(char(':'), parse_number), |n| {
+        LmmlCommand::SetChannel(n)
     })(input)
 }
 

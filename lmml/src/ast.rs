@@ -28,6 +28,7 @@ pub enum LmmlCommand {
     SetVolume(u32),
     SetTempo(u32),
     SetWaveform(u32),
+    SetChannel(u32),
     IncreaseOctave,
     DecreaseOctave,
 }
@@ -68,15 +69,31 @@ fn length_to_ms(tempo: u32, (length, is_dotted): (u32, bool)) -> u32 {
 
 #[derive(Debug, Clone)]
 pub struct EvalEnv {
-    octave: i32,
-    length: u32,
-    is_dotted: bool,
-    tempo: u32,
-    volume: u32,
-    waveform: u32,
+    pub current_channel: usize,
+    pub channels: [ChannelEnv; 16],
 }
 
-impl Display for EvalEnv {
+impl EvalEnv {
+    pub fn current(&self) -> &ChannelEnv {
+        &self.channels[self.current_channel]
+    }
+
+    pub fn current_mut(&mut self) -> &mut ChannelEnv {
+        &mut self.channels[self.current_channel]
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ChannelEnv {
+    pub octave: i32,
+    pub length: u32,
+    pub is_dotted: bool,
+    pub tempo: u32,
+    pub volume: u32,
+    pub waveform: u32,
+}
+
+impl Display for ChannelEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -94,6 +111,32 @@ impl Display for EvalEnv {
 impl Default for EvalEnv {
     fn default() -> Self {
         Self {
+            current_channel: Default::default(),
+            channels: [
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+                ChannelEnv::default(),
+            ],
+        }
+    }
+}
+
+impl Default for ChannelEnv {
+    fn default() -> Self {
+        Self {
             octave: 4,
             length: 4,
             is_dotted: false,
@@ -106,9 +149,25 @@ impl Default for EvalEnv {
 
 impl LmmlAst {
     pub fn to_timeline(&self, env: &mut EvalEnv) -> LmmlTimeline {
-        let mut elements = Vec::new();
+        let mut elements = [
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+        ];
 
-        elements.push(Element::Event(Event::ChangeTempo(env.tempo)));
         for command in self.0.iter() {
             match command {
                 LmmlCommand::Note {
@@ -116,25 +175,35 @@ impl LmmlAst {
                     modifier,
                     length: l,
                     is_dotted,
-                } => elements.push(Element::Note(Note {
+                } => elements[env.current_channel].push(Element::Note(Note {
                     note_type: NoteType::Single {
-                        hz: note.to_hz(*modifier, env.octave),
-                        volume: env.volume as f32,
-                        waveform: env.waveform,
+                        hz: note.to_hz(*modifier, env.current().octave),
+                        volume: env.current().volume as f32,
+                        waveform: env.current().waveform,
                     },
                     length_ms: length_to_ms(
-                        env.tempo,
-                        resolve_length(env.length, env.is_dotted, *l, *is_dotted),
+                        env.current().tempo,
+                        resolve_length(
+                            env.current().length,
+                            env.current().is_dotted,
+                            *l,
+                            *is_dotted,
+                        ),
                     ),
                 })),
                 LmmlCommand::Rest {
                     length: l,
                     is_dotted,
-                } => elements.push(Element::Note(Note {
+                } => elements[env.current_channel].push(Element::Note(Note {
                     note_type: NoteType::Rest,
                     length_ms: length_to_ms(
-                        env.tempo,
-                        resolve_length(env.length, env.is_dotted, *l, *is_dotted),
+                        env.current().tempo,
+                        resolve_length(
+                            env.current().length,
+                            env.current().is_dotted,
+                            *l,
+                            *is_dotted,
+                        ),
                     ),
                 })),
                 LmmlCommand::Chord {
@@ -144,7 +213,7 @@ impl LmmlAst {
                 } => {
                     let mut notenumbers = notes
                         .iter()
-                        .map(|(n, m)| n.to_notenumber(*m, env.octave))
+                        .map(|(n, m)| n.to_notenumber(*m, env.current().octave))
                         .collect::<Vec<_>>();
                     for i in 1..notenumbers.len() {
                         while notenumbers[i - 1] >= notenumbers[i] {
@@ -152,41 +221,56 @@ impl LmmlAst {
                         }
                     }
                     let hzs = notenumbers.iter().map(|n| notenumber_to_hz(*n)).collect();
-                    elements.push(Element::Note(Note {
+                    elements[env.current_channel].push(Element::Note(Note {
                         note_type: NoteType::Chord {
                             hzs,
-                            volume: env.volume as f32,
-                            waveform: env.waveform,
+                            volume: env.current().volume as f32,
+                            waveform: env.current().waveform,
                         },
                         length_ms: length_to_ms(
-                            env.tempo,
-                            resolve_length(env.length, env.is_dotted, *l, *is_dotted),
+                            env.current().tempo,
+                            resolve_length(
+                                env.current().length,
+                                env.current().is_dotted,
+                                *l,
+                                *is_dotted,
+                            ),
                         ),
                     }))
                 }
                 LmmlCommand::NoteNumber(n) => {
-                    elements.push(Element::Note(Note {
+                    elements[env.current_channel].push(Element::Note(Note {
                         note_type: NoteType::Single {
                             hz: notenumber_to_hz(*n as i32),
-                            volume: env.volume as f32,
-                            waveform: env.waveform,
+                            volume: env.current().volume as f32,
+                            waveform: env.current().waveform,
                         },
-                        length_ms: length_to_ms(env.tempo, (env.length, env.is_dotted)),
+                        length_ms: length_to_ms(
+                            env.current().tempo,
+                            (env.current().length, env.current().is_dotted),
+                        ),
                     }));
                 }
-                LmmlCommand::SetOctave(o) => env.octave = *o as i32,
+                LmmlCommand::SetOctave(o) => env.current_mut().octave = *o as i32,
                 LmmlCommand::SetLength(l, d) => {
-                    env.length = *l;
-                    env.is_dotted = *d;
+                    env.current_mut().length = *l;
+                    env.current_mut().is_dotted = *d;
                 }
-                LmmlCommand::SetVolume(v) => env.volume = *v,
+                LmmlCommand::SetVolume(v) => env.current_mut().volume = *v,
                 LmmlCommand::SetTempo(t) => {
-                    env.tempo = *t;
-                    elements.push(Element::Event(Event::ChangeTempo(*t)));
+                    env.current_mut().tempo = *t;
+                    elements[env.current_channel].push(Element::Event(Event::ChangeTempo(*t)));
                 }
-                LmmlCommand::SetWaveform(n) => env.waveform = *n,
-                LmmlCommand::IncreaseOctave => env.octave += 1,
-                LmmlCommand::DecreaseOctave => env.octave -= 1,
+                LmmlCommand::SetWaveform(n) => env.current_mut().waveform = *n,
+                LmmlCommand::SetChannel(n) => {
+                    if *n > 15 {
+                        panic!("チャンネル番号が大きすぎます : {}", n);
+                    } else {
+                        env.current_channel = *n as usize;
+                    }
+                }
+                LmmlCommand::IncreaseOctave => env.current_mut().octave += 1,
+                LmmlCommand::DecreaseOctave => env.current_mut().octave -= 1,
             }
         }
 

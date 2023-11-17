@@ -6,7 +6,7 @@ use crate::oscillator::{MixedWave, Wave, Waveform, SAMPLE_RATE};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlTimeline {
-    pub timeline: Vec<Element>,
+    pub timeline: [Vec<Element>; 16],
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -42,8 +42,8 @@ pub enum Event {
 }
 
 impl LmmlTimeline {
-    pub fn play(&self, sink: &Sink) {
-        for element in self.timeline.iter() {
+    pub fn play_channel(&self, i: usize, sink: &Sink) {
+        for element in self.timeline[i].iter() {
             match element {
                 Element::Note(note) => match note.note_type {
                     NoteType::Single {
@@ -97,11 +97,16 @@ impl LmmlTimeline {
             }
         }
     }
-}
 
-impl Display for LmmlTimeline {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for element in self.timeline.iter() {
+    pub fn play(&self, sink: &[Sink; 16]) {
+        for i in 0..16 {
+            self.play_channel(i, &sink[i]);
+        }
+    }
+
+    fn fmt_channel(&self, i: usize, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        println!("--- CH{} ---", i);
+        for element in self.timeline[i].iter() {
             match element {
                 Element::Note(note) => match note.note_type {
                     NoteType::Single {
@@ -141,6 +146,15 @@ impl Display for LmmlTimeline {
                 },
             }
             writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
+impl Display for LmmlTimeline {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for i in 0..16 {
+            self.fmt_channel(i, f)?;
         }
         Ok(())
     }

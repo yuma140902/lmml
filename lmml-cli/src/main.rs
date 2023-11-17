@@ -72,23 +72,119 @@ fn main() -> anyhow::Result<()> {
             let (_stream, stream_handle) = rodio::OutputStream::try_default().with_context(|| {
         "音声出力ストリームの取得に失敗しました。Windows WASAPIでのみ動作確認しています。"
     })?;
-            let sink = rodio::Sink::try_new(&stream_handle).with_context(|| {
-                "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
-            })?;
-            timeline.play(&sink);
-            sink.sleep_until_end();
+            let sinks = [
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+            ];
+            timeline.play(&sinks);
+            for i in 0..16 {
+                sinks[i].sleep_until_end();
+            }
         }
         SubCommand::Repl => {
             let (_stream, stream_handle) = rodio::OutputStream::try_default().with_context(|| {
         "音声出力ストリームの取得に失敗しました。Windows WASAPIでのみ動作確認しています。"
     })?;
-            let sink = rodio::Sink::try_new(&stream_handle).with_context(|| {
-                "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
-            })?;
+            let sinks = [
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+                rodio::Sink::try_new(&stream_handle).with_context(|| {
+                    "音声出力の作成に失敗しました。Windows WASAPIでのみ動作確認しています。"
+                })?,
+            ];
 
             let mut env = EvalEnv::default();
             loop {
-                print!("{env} : ");
+                print!("{} :{} ", env.current(), env.current_channel);
                 std::io::stdout()
                     .flush()
                     .with_context(|| "標準出力への出力エラー")?;
@@ -113,7 +209,7 @@ fn main() -> anyhow::Result<()> {
                 let timeline = ast.to_timeline(&mut env);
                 println!("=== Timeline ===");
                 println!("{}", timeline);
-                timeline.play(&sink);
+                timeline.play(&sinks);
             }
         }
     }
