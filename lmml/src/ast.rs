@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::timeline::{Element, Event, LmmlTimeline, Note, NoteType};
 
 #[derive(Debug, PartialEq, Clone)]
@@ -64,17 +66,49 @@ fn length_to_ms(tempo: u32, (length, is_dotted): (u32, bool)) -> u32 {
     ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
 }
 
-impl LmmlAst {
-    pub fn to_timeline(&self) -> LmmlTimeline {
-        let mut elements = Vec::new();
-        let mut octave = 4;
-        let mut length = 4;
-        let mut current_is_dotted = false;
-        let mut tempo = 120;
-        let mut volume = 20;
-        let mut waveform = 0;
+#[derive(Debug, Clone)]
+pub struct EvalEnv {
+    octave: i32,
+    length: u32,
+    is_dotted: bool,
+    tempo: u32,
+    volume: u32,
+    waveform: u32,
+}
 
-        elements.push(Element::Event(Event::ChangeTempo(tempo)));
+impl Display for EvalEnv {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "@{} v{} t{} l{}{} o{}",
+            self.waveform,
+            self.volume,
+            self.tempo,
+            self.length,
+            if self.is_dotted { "." } else { "" },
+            self.octave
+        )
+    }
+}
+
+impl Default for EvalEnv {
+    fn default() -> Self {
+        Self {
+            octave: 4,
+            length: 4,
+            is_dotted: false,
+            tempo: 120,
+            volume: 20,
+            waveform: 0,
+        }
+    }
+}
+
+impl LmmlAst {
+    pub fn to_timeline(&self, env: &mut EvalEnv) -> LmmlTimeline {
+        let mut elements = Vec::new();
+
+        elements.push(Element::Event(Event::ChangeTempo(env.tempo)));
         for command in self.0.iter() {
             match command {
                 LmmlCommand::Note {
@@ -84,13 +118,13 @@ impl LmmlAst {
                     is_dotted,
                 } => elements.push(Element::Note(Note {
                     note_type: NoteType::Single {
-                        hz: note.to_hz(*modifier, octave),
-                        volume: volume as f32,
-                        waveform,
+                        hz: note.to_hz(*modifier, env.octave),
+                        volume: env.volume as f32,
+                        waveform: env.waveform,
                     },
                     length_ms: length_to_ms(
-                        tempo,
-                        resolve_length(length, current_is_dotted, *l, *is_dotted),
+                        env.tempo,
+                        resolve_length(env.length, env.is_dotted, *l, *is_dotted),
                     ),
                 })),
                 LmmlCommand::Rest {
@@ -99,8 +133,8 @@ impl LmmlAst {
                 } => elements.push(Element::Note(Note {
                     note_type: NoteType::Rest,
                     length_ms: length_to_ms(
-                        tempo,
-                        resolve_length(length, current_is_dotted, *l, *is_dotted),
+                        env.tempo,
+                        resolve_length(env.length, env.is_dotted, *l, *is_dotted),
                     ),
                 })),
                 LmmlCommand::Chord {
@@ -110,7 +144,7 @@ impl LmmlAst {
                 } => {
                     let mut notenumbers = notes
                         .iter()
-                        .map(|(n, m)| n.to_notenumber(*m, octave))
+                        .map(|(n, m)| n.to_notenumber(*m, env.octave))
                         .collect::<Vec<_>>();
                     for i in 1..notenumbers.len() {
                         while notenumbers[i - 1] >= notenumbers[i] {
@@ -121,12 +155,12 @@ impl LmmlAst {
                     elements.push(Element::Note(Note {
                         note_type: NoteType::Chord {
                             hzs,
-                            volume: volume as f32,
-                            waveform,
+                            volume: env.volume as f32,
+                            waveform: env.waveform,
                         },
                         length_ms: length_to_ms(
-                            tempo,
-                            resolve_length(length, current_is_dotted, *l, *is_dotted),
+                            env.tempo,
+                            resolve_length(env.length, env.is_dotted, *l, *is_dotted),
                         ),
                     }))
                 }
@@ -134,25 +168,25 @@ impl LmmlAst {
                     elements.push(Element::Note(Note {
                         note_type: NoteType::Single {
                             hz: notenumber_to_hz(*n as i32),
-                            volume: volume as f32,
-                            waveform,
+                            volume: env.volume as f32,
+                            waveform: env.waveform,
                         },
-                        length_ms: length_to_ms(tempo, (length, current_is_dotted)),
+                        length_ms: length_to_ms(env.tempo, (env.length, env.is_dotted)),
                     }));
                 }
-                LmmlCommand::SetOctave(o) => octave = *o as i32,
+                LmmlCommand::SetOctave(o) => env.octave = *o as i32,
                 LmmlCommand::SetLength(l, d) => {
-                    length = *l;
-                    current_is_dotted = *d;
+                    env.length = *l;
+                    env.is_dotted = *d;
                 }
-                LmmlCommand::SetVolume(v) => volume = *v,
+                LmmlCommand::SetVolume(v) => env.volume = *v,
                 LmmlCommand::SetTempo(t) => {
-                    tempo = *t;
+                    env.tempo = *t;
                     elements.push(Element::Event(Event::ChangeTempo(*t)));
                 }
-                LmmlCommand::SetWaveform(n) => waveform = *n,
-                LmmlCommand::IncreaseOctave => octave += 1,
-                LmmlCommand::DecreaseOctave => octave -= 1,
+                LmmlCommand::SetWaveform(n) => env.waveform = *n,
+                LmmlCommand::IncreaseOctave => env.octave += 1,
+                LmmlCommand::DecreaseOctave => env.octave -= 1,
             }
         }
 
