@@ -107,17 +107,29 @@ impl LmmlAst {
                     notes,
                     length: l,
                     is_dotted,
-                } => elements.push(Element::Note(Note {
-                    note_type: NoteType::Chord {
-                        hzs: notes.iter().map(|(n, m)| n.to_hz(*m, octave)).collect(),
-                        volume: volume as f32,
-                        waveform,
-                    },
-                    length_ms: length_to_ms(
-                        tempo,
-                        resolve_length(length, current_is_dotted, *l, *is_dotted),
-                    ),
-                })),
+                } => {
+                    let mut notenumbers = notes
+                        .iter()
+                        .map(|(n, m)| n.to_notenumber(*m, octave))
+                        .collect::<Vec<_>>();
+                    for i in 1..notenumbers.len() {
+                        while notenumbers[i - 1] >= notenumbers[i] {
+                            notenumbers[i] += 12;
+                        }
+                    }
+                    let hzs = notenumbers.iter().map(|n| notenumber_to_hz(*n)).collect();
+                    elements.push(Element::Note(Note {
+                        note_type: NoteType::Chord {
+                            hzs,
+                            volume: volume as f32,
+                            waveform,
+                        },
+                        length_ms: length_to_ms(
+                            tempo,
+                            resolve_length(length, current_is_dotted, *l, *is_dotted),
+                        ),
+                    }))
+                }
                 LmmlCommand::NoteNumber(n) => {
                     elements.push(Element::Note(Note {
                         note_type: NoteType::Single {
