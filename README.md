@@ -48,45 +48,6 @@ egga ede.r8 dega ede.r8
 ab>c<b age.r8 dedc <bga.r8
 ```
 
-## LMML言語の文法
-
-```
-<lmml>       := <command>*
-<command>    := <note-cmd>
-              | <chord>
-              | <n-cmd>
-              | <rest-cmd>
-              | <set-octave>
-              | <set-length>
-              | <set-volume>
-              | <set-tempo>
-              | <set-wave>
-              | <inc-octave>
-              | <dec-octave>
-<note-cmd>   := <note-char> <modifier>? <number>? <dot>?
-<note-char>  := 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B'
-              | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b'
-<modifier>   := '+' | '-'
-<rest-cmd>   := 'R' <number>? <dot>? | 'r' <number>? <dot>?
-<chord>      := '[' (<note-char> <modifier>?)+ ']' <number>? <dot>?
-<dot>        := '.'
-<n-cmd>      := 'N' <number> | 'n' <number>
-<set-ocatve> := 'O' <number> | 'o' <number>
-<set-length> := 'L' <number> <dot>? | 'l' <number> <dot>?
-<set-volume> := 'V' <number> | 'v' <number>
-<set-tempo>  := 'T' <number> | 't' <number>
-<set-wave>   := '@' <number>
-<inc-octave> := '>'
-<dec-octave> := '<'
-<number>     := <digit>+
-<digit>      := '0' | '1' | '2' | '3' | '4'
-              | '5' | '6' | '7' | '8' | '9'
-```
-
-基本的に大文字小文字を区別しません。また、空白や改行は無視されます。
-
-`;`から始まる行はコメントとして無視されます。
-
 ## LMMLチュートリアル
 
 ### 演奏方法
@@ -108,6 +69,8 @@ lmml repl
 ### 構文
 
 LMMLにはいくつかのコマンドが存在します。それらのコマンドを並べたものがLMMLのプログラムです。
+
+厳密な文法が知りたい場合は下の「LMML言語の文法」を参照してください。
 
 ### 音符コマンド
 
@@ -189,6 +152,45 @@ MIDIのノート番号(0～127)によって音符を指定します。
 | 2    | パルス波   |
 | 3    | 三角波     |
 | 4    | 正弦波     |
+
+## LMML言語の文法
+
+```
+<lmml>       := <command>*
+<command>    := <note-cmd>
+              | <chord>
+              | <n-cmd>
+              | <rest-cmd>
+              | <set-octave>
+              | <set-length>
+              | <set-volume>
+              | <set-tempo>
+              | <set-wave>
+              | <inc-octave>
+              | <dec-octave>
+<note-cmd>   := <note-char> <modifier>? <number>? <dot>?
+<note-char>  := 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B'
+              | 'c' | 'd' | 'e' | 'f' | 'g' | 'a' | 'b'
+<modifier>   := '+' | '-'
+<rest-cmd>   := 'R' <number>? <dot>? | 'r' <number>? <dot>?
+<chord>      := '[' (<note-char> <modifier>?)+ ']' <number>? <dot>?
+<dot>        := '.'
+<n-cmd>      := 'N' <number> | 'n' <number>
+<set-ocatve> := 'O' <number> | 'o' <number>
+<set-length> := 'L' <number> <dot>? | 'l' <number> <dot>?
+<set-volume> := 'V' <number> | 'v' <number>
+<set-tempo>  := 'T' <number> | 't' <number>
+<set-wave>   := '@' <number>
+<inc-octave> := '>'
+<dec-octave> := '<'
+<number>     := <digit>+
+<digit>      := '0' | '1' | '2' | '3' | '4'
+              | '5' | '6' | '7' | '8' | '9'
+```
+
+基本的に大文字小文字を区別しません。また、空白や改行は無視されます。
+
+`;`から始まる行はコメントとして無視されます。
 
 ## LMML言語の細かい仕様
 
