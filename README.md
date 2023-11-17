@@ -1,5 +1,7 @@
 # LMML
 
+[![](https://img.shields.io/crates/v/lmml?color=blue)](https://crates.io/crates/lmml)
+
 LMML (**L**MML **M**usic **M**acro **L**anguage) はMMLの方言です。
 
 ## 演奏例
