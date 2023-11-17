@@ -7,7 +7,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.3.0"
 authors = ["yuma14"]
 repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
