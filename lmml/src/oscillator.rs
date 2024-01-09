@@ -105,15 +105,15 @@ impl Iterator for NoteWave {
     }
 }
 
-pub struct MixedWave(Vec<NoteWave>);
+pub struct ChordWave(Vec<NoteWave>);
 
-impl MixedWave {
+impl ChordWave {
     pub fn new(waves: Vec<NoteWave>) -> Self {
         Self(waves)
     }
 }
 
-impl Source for MixedWave {
+impl Source for ChordWave {
     fn current_frame_len(&self) -> Option<usize> {
         None
     }
@@ -131,7 +131,7 @@ impl Source for MixedWave {
     }
 }
 
-impl Iterator for MixedWave {
+impl Iterator for ChordWave {
     type Item = f32;
 
     fn next(&mut self) -> Option<Self::Item> {

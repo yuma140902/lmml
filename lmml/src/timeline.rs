@@ -2,7 +2,7 @@ use std::{fmt::Display, time::Duration};
 
 use rodio::{Sink, Source};
 
-use crate::oscillator::{MixedWave, NoteWave, Waveform, SAMPLE_RATE};
+use crate::oscillator::{ChordWave, NoteWave, Waveform, SAMPLE_RATE};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlTimeline {
@@ -76,7 +76,7 @@ impl LmmlTimeline {
                             4 => Waveform::Sine,
                             _ => Waveform::Saw,
                         };
-                        let mut source = MixedWave::new(
+                        let mut source = ChordWave::new(
                             hzs.iter()
                                 .map(|hz| NoteWave::new(waveform, *hz, 0.01 * volume))
                                 .collect(),
