@@ -13,14 +13,14 @@ pub enum Waveform {
     Sine,
 }
 
-pub struct Wave {
+pub struct NoteWave {
     frame: usize,
     waveform: Waveform,
     frequency: f32,
     amplitude: f32,
 }
 
-impl Wave {
+impl NoteWave {
     pub fn new(waveform: Waveform, frequency: f32, amplitude: f32) -> Self {
         Self {
             frame: 0,
@@ -31,7 +31,7 @@ impl Wave {
     }
 }
 
-impl Source for Wave {
+impl Source for NoteWave {
     fn current_frame_len(&self) -> Option<usize> {
         None
     }
@@ -49,7 +49,7 @@ impl Source for Wave {
     }
 }
 
-impl Iterator for Wave {
+impl Iterator for NoteWave {
     type Item = f32;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -105,10 +105,10 @@ impl Iterator for Wave {
     }
 }
 
-pub struct MixedWave(Vec<Wave>);
+pub struct MixedWave(Vec<NoteWave>);
 
 impl MixedWave {
-    pub fn new(waves: Vec<Wave>) -> Self {
+    pub fn new(waves: Vec<NoteWave>) -> Self {
         Self(waves)
     }
 }
