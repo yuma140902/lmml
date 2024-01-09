@@ -1,6 +1,9 @@
 use std::f32::consts::PI;
 
-use rodio::Source;
+use rodio::{
+    source::{TakeDuration, Zero},
+    Source,
+};
 
 pub const SAMPLE_RATE: u32 = 44100;
 
@@ -138,6 +141,125 @@ impl Iterator for ChordWave {
         if self.0.is_empty() {
             return Some(0.0);
         }
+        let sum: f32 = self
+            .0
+            .iter_mut()
+            .map(|wave| wave.next().unwrap_or(0.0))
+            .sum();
+        Some(sum)
+    }
+}
+
+pub enum ScoreWave {
+    Note(TakeDuration<NoteWave>),
+    Chord(TakeDuration<ChordWave>),
+    Rest(TakeDuration<Zero<f32>>),
+}
+
+impl Source for ScoreWave {
+    fn current_frame_len(&self) -> Option<usize> {
+        None
+    }
+
+    fn channels(&self) -> u16 {
+        1
+    }
+
+    fn sample_rate(&self) -> u32 {
+        SAMPLE_RATE
+    }
+
+    fn total_duration(&self) -> Option<std::time::Duration> {
+        None
+    }
+}
+
+impl Iterator for ScoreWave {
+    type Item = f32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self {
+            ScoreWave::Note(note) => note.next(),
+            ScoreWave::Chord(chord) => chord.next(),
+            ScoreWave::Rest(rest) => rest.next(),
+        }
+    }
+}
+
+pub struct ChannelWave {
+    waves: Vec<ScoreWave>,
+    index: usize,
+}
+
+impl ChannelWave {
+    pub fn new(waves: Vec<ScoreWave>) -> Self {
+        Self { waves, index: 0 }
+    }
+}
+
+impl Source for ChannelWave {
+    fn current_frame_len(&self) -> Option<usize> {
+        None
+    }
+
+    fn channels(&self) -> u16 {
+        1
+    }
+
+    fn sample_rate(&self) -> u32 {
+        SAMPLE_RATE
+    }
+
+    fn total_duration(&self) -> Option<std::time::Duration> {
+        None
+    }
+}
+
+impl Iterator for ChannelWave {
+    type Item = f32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.waves.len() {
+            return None;
+        }
+
+        let wave = &mut self.waves[self.index];
+        match wave.next() {
+            Some(value) => Some(value),
+            None => {
+                self.index += 1;
+                self.next()
+            }
+        }
+    }
+}
+
+pub struct MusicWave(Vec<ChannelWave>);
+
+impl MusicWave {
+    pub fn new(waves: Vec<ChannelWave>) -> Self {
+        Self(waves)
+    }
+}
+
+impl Source for MusicWave {
+    fn current_frame_len(&self) -> Option<usize> {
+        None
+    }
+    fn channels(&self) -> u16 {
+        1
+    }
+    fn sample_rate(&self) -> u32 {
+        SAMPLE_RATE
+    }
+    fn total_duration(&self) -> Option<std::time::Duration> {
+        None
+    }
+}
+
+impl Iterator for MusicWave {
+    type Item = f32;
+    fn next(&mut self) -> Option<Self::Item> {
         let sum: f32 = self
             .0
             .iter_mut()

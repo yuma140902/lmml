@@ -2,7 +2,9 @@ use std::{fmt::Display, time::Duration};
 
 use rodio::{Sink, Source};
 
-use crate::oscillator::{ChordWave, NoteWave, Waveform, SAMPLE_RATE};
+use crate::oscillator::{
+    ChannelWave, ChordWave, MusicWave, NoteWave, ScoreWave, Waveform, SAMPLE_RATE,
+};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlTimeline {
@@ -42,7 +44,8 @@ pub enum Event {
 }
 
 impl LmmlTimeline {
-    pub fn play_channel(&self, i: usize, sink: &Sink) {
+    fn generate_channel_wave(&self, i: usize) -> ChannelWave {
+        let mut waves = vec![];
         for element in self.timeline[i].iter() {
             match element {
                 Element::Note(note) => match note.note_type {
@@ -62,7 +65,7 @@ impl LmmlTimeline {
                         let mut source = NoteWave::new(waveform, hz, 0.01 * volume)
                             .take_duration(Duration::from_millis(note.length_ms as u64));
                         source.set_filter_fadeout();
-                        sink.append(source);
+                        waves.push(ScoreWave::Note(source));
                     }
                     NoteType::Chord {
                         ref hzs,
@@ -83,12 +86,12 @@ impl LmmlTimeline {
                         )
                         .take_duration(Duration::from_millis(note.length_ms as u64));
                         source.set_filter_fadeout();
-                        sink.append(source);
+                        waves.push(ScoreWave::Chord(source))
                     }
                     NoteType::Rest => {
                         let source = rodio::source::Zero::<f32>::new(1, SAMPLE_RATE)
                             .take_duration(Duration::from_millis(note.length_ms as u64));
-                        sink.append(source);
+                        waves.push(ScoreWave::Rest(source));
                     }
                 },
                 Element::Event(event) => match event {
@@ -96,12 +99,13 @@ impl LmmlTimeline {
                 },
             }
         }
+        ChannelWave::new(waves)
     }
 
-    pub fn play(&self, sink: &[Sink; 16]) {
-        for i in 0..16 {
-            self.play_channel(i, &sink[i]);
-        }
+    pub fn play(&self, sink: &Sink) {
+        let channel_waves = (0..16).map(|i| self.generate_channel_wave(i)).collect();
+        let music = MusicWave::new(channel_waves);
+        sink.append(music);
     }
 
     fn fmt_channel(&self, i: usize, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
