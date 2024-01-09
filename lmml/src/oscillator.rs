@@ -260,11 +260,12 @@ impl Source for MusicWave {
 impl Iterator for MusicWave {
     type Item = f32;
     fn next(&mut self) -> Option<Self::Item> {
-        let sum: f32 = self
-            .0
-            .iter_mut()
-            .map(|wave| wave.next().unwrap_or(0.0))
-            .sum();
-        Some(sum)
+        let mut samples = self.0.iter_mut().filter_map(|wave| wave.next());
+        if let Some(first) = samples.next() {
+            let sum = samples.sum::<f32>() + first;
+            Some(sum)
+        } else {
+            None
+        }
     }
 }
