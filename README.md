@@ -1,6 +1,9 @@
 # LMML
 
-[![](https://img.shields.io/crates/v/lmml?color=blue)](https://crates.io/crates/lmml)
+[![](https://img.shields.io/crates/v/lmml?color=blue&label=lmml)](https://crates.io/crates/lmml)
+[![](https://img.shields.io/crates/v/lmml-parser?color=blue&label=lmml-parser)](https://crates.io/crates/lmml-parser)
+[![](https://img.shields.io/crates/v/lmml-cli?color=blue&label=lmml-cli)](https://crates.io/crates/lmml-cli)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/yuma140902/lmml/test.yml)]()
 
 LMML (**L**MML **M**usic **M**acro **L**anguage) はMMLの方言です。
 
