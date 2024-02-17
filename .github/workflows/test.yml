@@ -12,10 +12,15 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Install alsa deps
+      if: matrix.os == 'ubuntu-latest'
       run: sudo apt-get install -y libasound2-dev portaudio19-dev build-essential libpulse-dev libdbus-1-dev
     - name: Install clippy
       uses: dtolnay/rust-toolchain@stable
