@@ -13,9 +13,9 @@ repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-anyhow = "1.0.79"
+anyhow = "1.0.83"
 array-init = "2.1.0"
-clap = { version = "4.5.1", features = [ "derive" ] }
+clap = { version = "4.5.4", features = [ "derive" ] }
 lmml = { version = "0.5.0", path = "./lmml/" }
 lmml-parser = { version = "0.5.0", path = "./lmml-parser" }
 nom = "7.1.3"
