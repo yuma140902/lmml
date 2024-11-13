@@ -6,6 +6,7 @@ use lmml::ast::{EvalEnv, LmmlAst};
 use nom::IResult;
 
 #[derive(Debug, Parser)]
+#[command(version, about)]
 pub struct Args {
     #[command(subcommand)]
     subcommand: SubCommand,
