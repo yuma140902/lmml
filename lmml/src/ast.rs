@@ -2,10 +2,10 @@ use std::fmt::Display;
 
 use crate::timeline::{Element, Event, LmmlTimeline, Note, NoteType};
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct LmmlAst(pub Vec<LmmlCommand>);
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum LmmlCommand {
     Note {
         note: NoteChar,
@@ -51,7 +51,12 @@ pub enum NoteModifier {
     Natural,
 }
 
-fn resolve_length(l_cmd_num: u32, l_cmd_dot: bool, num: Option<u32>, dot: bool) -> (u32, bool) {
+const fn resolve_length(
+    l_cmd_num: u32,
+    l_cmd_dot: bool,
+    num: Option<u32>,
+    dot: bool,
+) -> (u32, bool) {
     let m = l_cmd_num;
     match (l_cmd_dot, num, dot) {
         (false, None, d) => (m, d),
@@ -67,14 +72,14 @@ fn length_to_ms(tempo: u32, (length, is_dotted): (u32, bool)) -> u32 {
     ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct EvalEnv {
     pub current_channel: usize,
     pub channels: [ChannelEnv; 16],
 }
 
 impl EvalEnv {
-    pub fn current(&self) -> &ChannelEnv {
+    pub const fn current(&self) -> &ChannelEnv {
         &self.channels[self.current_channel]
     }
 
@@ -105,32 +110,6 @@ impl Display for ChannelEnv {
             if self.is_dotted { "." } else { "" },
             self.octave
         )
-    }
-}
-
-impl Default for EvalEnv {
-    fn default() -> Self {
-        Self {
-            current_channel: Default::default(),
-            channels: [
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-                ChannelEnv::default(),
-            ],
-        }
     }
 }
 
@@ -284,15 +263,17 @@ impl NoteChar {
         notenumber_to_hz(notenumber)
     }
 
-    pub fn to_notenumber(&self, modifier: NoteModifier, octave: i32) -> i32 {
+    pub const fn to_notenumber(&self, modifier: NoteModifier, octave: i32) -> i32 {
+        use NoteChar::*;
+
         let base: i32 = match self {
-            NoteChar::C => 0,
-            NoteChar::D => 2,
-            NoteChar::E => 4,
-            NoteChar::F => 5,
-            NoteChar::G => 7,
-            NoteChar::A => 9,
-            NoteChar::B => 11,
+            C => 0,
+            D => 2,
+            E => 4,
+            F => 5,
+            G => 7,
+            A => 9,
+            B => 11,
         };
         let modifier = match modifier {
             NoteModifier::Sharp => 1,
@@ -304,7 +285,7 @@ impl NoteChar {
 }
 
 pub fn notenumber_to_hz(notenumber: i32) -> f32 {
-    440.0 * 2.0_f32.powf((notenumber - 69) as f32 / 12.0)
+    440.0 * ((notenumber - 69) as f32 / 12.0).exp2()
 }
 
 #[cfg(test)]

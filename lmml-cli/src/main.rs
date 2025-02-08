@@ -1,3 +1,7 @@
+#![deny(rust_2018_idioms)]
+#![deny(clippy::all)]
+#![deny(clippy::nursery)]
+
 use std::{io::Write, path::PathBuf};
 
 use anyhow::Context;
@@ -99,12 +103,12 @@ fn main() -> anyhow::Result<()> {
                     .with_context(|| "標準入力からの読み込みエラー")?;
 
                 let line = line.trim();
-                if line.is_empty() || line.chars().next() == Some(';') {
+                if line.is_empty() || line.starts_with(';') {
                     continue;
                 }
 
                 let ast = lmml_parser::parse_lmml(line);
-                let ast = match unwrap_or_show_error(ast, &line) {
+                let ast = match unwrap_or_show_error(ast, line) {
                     Err(e) => {
                         println!("{}", e);
                         continue;

@@ -24,7 +24,7 @@ pub struct NoteWave {
 }
 
 impl NoteWave {
-    pub fn new(waveform: Waveform, frequency: f32, amplitude: f32) -> Self {
+    pub const fn new(waveform: Waveform, frequency: f32, amplitude: f32) -> Self {
         Self {
             frame: 0,
             waveform,
@@ -111,7 +111,7 @@ impl Iterator for NoteWave {
 pub struct ChordWave(Vec<NoteWave>);
 
 impl ChordWave {
-    pub fn new(waves: Vec<NoteWave>) -> Self {
+    pub const fn new(waves: Vec<NoteWave>) -> Self {
         Self(waves)
     }
 }
@@ -179,9 +179,9 @@ impl Iterator for ScoreWave {
 
     fn next(&mut self) -> Option<Self::Item> {
         match self {
-            ScoreWave::Note(note) => note.next(),
-            ScoreWave::Chord(chord) => chord.next(),
-            ScoreWave::Rest(rest) => rest.next(),
+            Self::Note(note) => note.next(),
+            Self::Chord(chord) => chord.next(),
+            Self::Rest(rest) => rest.next(),
         }
     }
 }
@@ -192,7 +192,7 @@ pub struct ChannelWave {
 }
 
 impl ChannelWave {
-    pub fn new(waves: Vec<ScoreWave>) -> Self {
+    pub const fn new(waves: Vec<ScoreWave>) -> Self {
         Self { waves, index: 0 }
     }
 }
@@ -237,7 +237,7 @@ impl Iterator for ChannelWave {
 pub struct MusicWave(Vec<ChannelWave>);
 
 impl MusicWave {
-    pub fn new(waves: Vec<ChannelWave>) -> Self {
+    pub const fn new(waves: Vec<ChannelWave>) -> Self {
         Self(waves)
     }
 }
@@ -261,11 +261,8 @@ impl Iterator for MusicWave {
     type Item = f32;
     fn next(&mut self) -> Option<Self::Item> {
         let mut samples = self.0.iter_mut().filter_map(|wave| wave.next());
-        if let Some(first) = samples.next() {
-            let sum = samples.sum::<f32>() + first;
-            Some(sum)
-        } else {
-            None
-        }
+        let first = samples.next()?;
+        let sum = samples.sum::<f32>() + first;
+        Some(sum)
     }
 }

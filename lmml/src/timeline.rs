@@ -38,7 +38,7 @@ pub enum NoteType {
     Rest,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Event {
     ChangeTempo(u32),
 }
