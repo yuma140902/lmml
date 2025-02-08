@@ -7,14 +7,14 @@ members = [
 ]
 
 [workspace.package]
-version = "0.5.4"
+version = "0.6.0"
 authors = ["yuma14"]
 repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-lmml = { version = "0.5.4", path = "./lmml/" }
-lmml-parser = { version = "0.5.4", path = "./lmml-parser" }
+lmml = { version = "0.6.0", path = "./lmml/" }
+lmml-parser = { version = "0.6.0", path = "./lmml-parser" }
 
 anyhow = "1.0.95"
 array-init = "2.1.0"
