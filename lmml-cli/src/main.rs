@@ -8,6 +8,7 @@ use anyhow::Context;
 use clap::Parser;
 use lmml::ast::{EvalEnv, LmmlAst};
 use nom::IResult;
+use nom_language::error::VerboseError;
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -24,7 +25,10 @@ pub enum SubCommand {
     Repl,
 }
 
-fn unwrap_or_show_error(ast: IResult<&str, LmmlAst>, input: &str) -> anyhow::Result<LmmlAst> {
+fn unwrap_or_show_error(
+    ast: IResult<&str, LmmlAst, VerboseError<&str>>,
+    input: &str,
+) -> anyhow::Result<LmmlAst> {
     match ast {
         Err(err) => {
             match err {
@@ -32,16 +36,7 @@ fn unwrap_or_show_error(ast: IResult<&str, LmmlAst>, input: &str) -> anyhow::Res
                     eprintln!("nom::Err::Incomplete");
                 }
                 nom::Err::Error(e) | nom::Err::Failure(e) => {
-                    eprintln!("{}", input);
-                    let pos = input.chars().count() - e.input.chars().count();
-                    for _ in 0..pos {
-                        eprint!(" ");
-                    }
-                    eprintln!(
-                        "^ {} 文字目 ('{}')",
-                        pos + 1,
-                        e.input.chars().next().unwrap_or(' ')
-                    );
+                    eprintln!("{}", nom_language::error::convert_error(input, e));
                 }
             }
             anyhow::bail!("LMMLに構文エラーがあります")

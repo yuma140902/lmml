@@ -4,6 +4,7 @@
 
 use lmml::ast::LmmlAst;
 use nom::IResult;
+use nom_language::error::VerboseError;
 
 mod parsers;
 
@@ -18,6 +19,6 @@ pub fn remove_comments(input: &str) -> String {
     v.join("\n")
 }
 
-pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst> {
+pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst, VerboseError<&str>> {
     parsers::parse_lmml_until_eof(input)
 }

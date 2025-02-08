@@ -8,12 +8,13 @@ use nom::{
     sequence::{delimited, pair, preceded, terminated},
     IResult, Parser,
 };
+use nom_language::error::VerboseError;
 
-pub fn parse_lmml_until_eof(input: &str) -> IResult<&str, LmmlAst> {
+pub fn parse_lmml_until_eof(input: &str) -> IResult<&str, LmmlAst, VerboseError<&str>> {
     terminated(parse_lmml, eof).parse(input)
 }
 
-pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst> {
+pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst, VerboseError<&str>> {
     map(
         many0(delimited(
             alt((value((), multispace0), value((), opt(comment)))),
@@ -25,7 +26,7 @@ pub fn parse_lmml(input: &str) -> IResult<&str, LmmlAst> {
     .parse(input)
 }
 
-pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     alt((
         parse_note_command,
         parse_rest_command,
@@ -43,7 +44,7 @@ pub fn parse_command(input: &str) -> IResult<&str, LmmlCommand> {
     .parse(input)
 }
 
-pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(
         (
             parse_note_char,
@@ -64,7 +65,7 @@ pub fn parse_note_command(input: &str) -> IResult<&str, LmmlCommand> {
     .parse(input)
 }
 
-pub fn parse_chord_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_chord_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(
         (
             delimited(
@@ -87,7 +88,7 @@ pub fn parse_chord_command(input: &str) -> IResult<&str, LmmlCommand> {
     .parse(input)
 }
 
-pub fn parse_rest_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_rest_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(
         preceded(one_of("Rr"), pair(opt(parse_number), parse_dot)),
         |(length, is_dotted)| LmmlCommand::Rest { length, is_dotted },
@@ -95,21 +96,21 @@ pub fn parse_rest_command(input: &str) -> IResult<&str, LmmlCommand> {
     .parse(input)
 }
 
-pub fn parse_n_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_n_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(one_of("Nn"), parse_number), |n| {
         LmmlCommand::NoteNumber(n)
     })
     .parse(input)
 }
 
-pub fn parse_octave_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_octave_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(one_of("Oo"), parse_number), |n| {
         LmmlCommand::SetOctave(n)
     })
     .parse(input)
 }
 
-pub fn parse_length_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_length_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(
         preceded(one_of("Ll"), pair(parse_number, parse_dot)),
         |(n, d)| LmmlCommand::SetLength(n, d),
@@ -117,43 +118,43 @@ pub fn parse_length_command(input: &str) -> IResult<&str, LmmlCommand> {
     .parse(input)
 }
 
-pub fn parse_volume_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_volume_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(one_of("Vv"), parse_number), |n| {
         LmmlCommand::SetVolume(n)
     })
     .parse(input)
 }
 
-pub fn parse_tempo_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_tempo_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(one_of("Tt"), parse_number), |n| {
         LmmlCommand::SetTempo(n)
     })
     .parse(input)
 }
 
-pub fn parse_waveform_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_waveform_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(char('@'), parse_number), |n| {
         LmmlCommand::SetWaveform(n)
     })
     .parse(input)
 }
 
-pub fn parse_channel_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_channel_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(preceded(char(':'), parse_number), |n| {
         LmmlCommand::SetChannel(n)
     })
     .parse(input)
 }
 
-pub fn parse_inc_octave_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_inc_octave_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(char('>'), |_| LmmlCommand::IncreaseOctave).parse(input)
 }
 
-pub fn parse_dec_octave_command(input: &str) -> IResult<&str, LmmlCommand> {
+pub fn parse_dec_octave_command(input: &str) -> IResult<&str, LmmlCommand, VerboseError<&str>> {
     map(char('<'), |_| LmmlCommand::DecreaseOctave).parse(input)
 }
 
-pub fn parse_note_char(input: &str) -> IResult<&str, NoteChar> {
+pub fn parse_note_char(input: &str) -> IResult<&str, NoteChar, VerboseError<&str>> {
     map(one_of("CDEFGABcdefgab"), |c| match c {
         'C' | 'c' => NoteChar::C,
         'D' | 'd' => NoteChar::D,
@@ -169,7 +170,7 @@ pub fn parse_note_char(input: &str) -> IResult<&str, NoteChar> {
     .parse(input)
 }
 
-pub fn parse_modifier(input: &str) -> IResult<&str, NoteModifier> {
+pub fn parse_modifier(input: &str) -> IResult<&str, NoteModifier, VerboseError<&str>> {
     map(one_of("+-"), |c| match c {
         '+' => NoteModifier::Sharp,
         '-' => NoteModifier::Flat,
@@ -178,11 +179,11 @@ pub fn parse_modifier(input: &str) -> IResult<&str, NoteModifier> {
     .parse(input)
 }
 
-pub fn parse_dot(input: &str) -> IResult<&str, bool> {
+pub fn parse_dot(input: &str) -> IResult<&str, bool, VerboseError<&str>> {
     map(opt(char('.')), |c| c.is_some()).parse(input)
 }
 
-pub fn parse_number(input: &str) -> IResult<&str, u32> {
+pub fn parse_number(input: &str) -> IResult<&str, u32, VerboseError<&str>> {
     map(many1(one_of("0123456789")), |s| {
         s.iter().collect::<String>().parse::<u32>().unwrap()
     })
