@@ -1,12 +1,12 @@
 use lmml::ast::{LmmlAst, LmmlCommand, NoteChar, NoteModifier};
 use nom::{
+    IResult, Parser,
     branch::alt,
     character::complete::{char, multispace0, none_of, one_of},
     combinator::{eof, map, opt, value},
     error::ParseError,
     multi::{many0, many1},
     sequence::{delimited, pair, preceded, terminated},
-    IResult, Parser,
 };
 use nom_language::error::VerboseError;
 

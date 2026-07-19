@@ -1,12 +1,13 @@
 [package]
 name = "lmml"
-description = "LMML Music Macro Language"
 version.workspace = true
 authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "LMML Music Macro Language"
+readme = "../README.md"
 repository.workspace = true
 license.workspace = true
-edition = "2021"
-readme = "../README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
