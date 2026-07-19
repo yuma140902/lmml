@@ -1,0 +1,9 @@
+[workspace]
+pr_draft = true
+release_always = false
+git_release_enable = true
+git_release_latest = false
+
+[[package]]
+name = "lmml-cli"
+git_release_draft = true
