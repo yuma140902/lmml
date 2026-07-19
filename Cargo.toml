@@ -1,11 +1,12 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = ["lmml", "lmml-cli", "lmml-parser"]
 
 [workspace.package]
 version = "0.6.1"
 authors = ["yuma14"]
 edition = "2024"
+rust-version = "1.97.0"
 repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
