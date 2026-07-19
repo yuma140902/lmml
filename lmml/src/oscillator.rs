@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::{f32::consts::PI, num::NonZero};
 
 use rodio::{
     source::{TakeDuration, Zero},
@@ -6,6 +6,7 @@ use rodio::{
 };
 
 pub const SAMPLE_RATE: u32 = 44100;
+pub const SAMPLE_RATE_NONZERO: NonZero<u32> = NonZero::new(SAMPLE_RATE).unwrap();
 
 #[derive(Debug, Clone, Copy)]
 pub enum Waveform {
@@ -35,19 +36,19 @@ impl NoteWave {
 }
 
 impl Source for NoteWave {
-    fn current_frame_len(&self) -> Option<usize> {
-        None
+    fn channels(&self) -> NonZero<u16> {
+        const { NonZero::new(1).unwrap() }
     }
 
-    fn channels(&self) -> u16 {
-        1
-    }
-
-    fn sample_rate(&self) -> u32 {
-        SAMPLE_RATE
+    fn sample_rate(&self) -> NonZero<u32> {
+        SAMPLE_RATE_NONZERO
     }
 
     fn total_duration(&self) -> Option<std::time::Duration> {
+        None
+    }
+
+    fn current_span_len(&self) -> Option<usize> {
         None
     }
 }
@@ -117,16 +118,16 @@ impl ChordWave {
 }
 
 impl Source for ChordWave {
-    fn current_frame_len(&self) -> Option<usize> {
+    fn current_span_len(&self) -> Option<usize> {
         None
     }
 
-    fn channels(&self) -> u16 {
-        1
+    fn channels(&self) -> NonZero<u16> {
+        const { NonZero::new(1).unwrap() }
     }
 
-    fn sample_rate(&self) -> u32 {
-        SAMPLE_RATE
+    fn sample_rate(&self) -> NonZero<u32> {
+        SAMPLE_RATE_NONZERO
     }
 
     fn total_duration(&self) -> Option<std::time::Duration> {
@@ -153,20 +154,20 @@ impl Iterator for ChordWave {
 pub enum ScoreWave {
     Note(TakeDuration<NoteWave>),
     Chord(TakeDuration<ChordWave>),
-    Rest(TakeDuration<Zero<f32>>),
+    Rest(TakeDuration<Zero>),
 }
 
 impl Source for ScoreWave {
-    fn current_frame_len(&self) -> Option<usize> {
+    fn current_span_len(&self) -> Option<usize> {
         None
     }
 
-    fn channels(&self) -> u16 {
-        1
+    fn channels(&self) -> NonZero<u16> {
+        const { NonZero::new(1).unwrap() }
     }
 
-    fn sample_rate(&self) -> u32 {
-        SAMPLE_RATE
+    fn sample_rate(&self) -> NonZero<u32> {
+        SAMPLE_RATE_NONZERO
     }
 
     fn total_duration(&self) -> Option<std::time::Duration> {
@@ -198,16 +199,16 @@ impl ChannelWave {
 }
 
 impl Source for ChannelWave {
-    fn current_frame_len(&self) -> Option<usize> {
+    fn current_span_len(&self) -> Option<usize> {
         None
     }
 
-    fn channels(&self) -> u16 {
-        1
+    fn channels(&self) -> NonZero<u16> {
+        const { NonZero::new(1).unwrap() }
     }
 
-    fn sample_rate(&self) -> u32 {
-        SAMPLE_RATE
+    fn sample_rate(&self) -> NonZero<u32> {
+        SAMPLE_RATE_NONZERO
     }
 
     fn total_duration(&self) -> Option<std::time::Duration> {
@@ -243,14 +244,14 @@ impl MusicWave {
 }
 
 impl Source for MusicWave {
-    fn current_frame_len(&self) -> Option<usize> {
+    fn current_span_len(&self) -> Option<usize> {
         None
     }
-    fn channels(&self) -> u16 {
-        1
+    fn channels(&self) -> NonZero<u16> {
+        const { NonZero::new(1).unwrap() }
     }
-    fn sample_rate(&self) -> u32 {
-        SAMPLE_RATE
+    fn sample_rate(&self) -> NonZero<u32> {
+        SAMPLE_RATE_NONZERO
     }
     fn total_duration(&self) -> Option<std::time::Duration> {
         None
