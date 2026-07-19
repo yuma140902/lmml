@@ -1,9 +1,9 @@
-use std::{fmt::Display, time::Duration};
+use std::{fmt::Display, num::NonZero, time::Duration};
 
-use rodio::{Sink, Source};
+use rodio::{Player, Source};
 
 use crate::oscillator::{
-    ChannelWave, ChordWave, MusicWave, NoteWave, ScoreWave, Waveform, SAMPLE_RATE,
+    ChannelWave, ChordWave, MusicWave, NoteWave, ScoreWave, Waveform, SAMPLE_RATE_NONZERO,
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -89,8 +89,11 @@ impl LmmlTimeline {
                         waves.push(ScoreWave::Chord(source))
                     }
                     NoteType::Rest => {
-                        let source = rodio::source::Zero::<f32>::new(1, SAMPLE_RATE)
-                            .take_duration(Duration::from_millis(note.length_ms as u64));
+                        let source = rodio::source::Zero::new(
+                            const { NonZero::new(1).unwrap() },
+                            SAMPLE_RATE_NONZERO,
+                        )
+                        .take_duration(Duration::from_millis(note.length_ms as u64));
                         waves.push(ScoreWave::Rest(source));
                     }
                 },
@@ -102,10 +105,10 @@ impl LmmlTimeline {
         ChannelWave::new(waves)
     }
 
-    pub fn play(&self, sink: &Sink) {
+    pub fn play(&self, player: &Player) {
         let channel_waves = (0..16).map(|i| self.generate_channel_wave(i)).collect();
         let music = MusicWave::new(channel_waves);
-        sink.append(music);
+        player.append(music);
     }
 
     fn fmt_channel(&self, i: usize, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

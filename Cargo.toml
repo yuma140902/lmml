@@ -1,10 +1,6 @@
 [workspace]
 resolver = "2"
-members = [
-  "lmml",
-  "lmml-parser",
-  "lmml-cli"
-]
+members = ["lmml", "lmml-cli", "lmml-parser"]
 
 [workspace.package]
 version = "0.6.1"
@@ -13,12 +9,12 @@ repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-lmml = { version = "0.6.1", path = "./lmml/" }
-lmml-parser = { version = "0.6.1", path = "./lmml-parser" }
+lmml = { path = "./lmml/", version = "0.6.1" }
+lmml-parser = { path = "./lmml-parser", version = "0.6.1" }
 
 anyhow = "1.0.95"
 array-init = "2.1.0"
-clap = { version = "4.5.28", features = [ "derive" ] }
+clap = { version = "4.5.28", features = ["derive"] }
 nom = "8.0.0"
 nom-language = "0.1.0"
-rodio = "0.20.1"
+rodio = "0.22.2"
