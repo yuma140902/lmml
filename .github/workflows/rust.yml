@@ -1,0 +1,44 @@
+name: Rust
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+  RUSTDOCFLAGS: -Dwarnings
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        cmd:
+          - cargo build --all-targets --verbose
+          - cargo build --all-targets --verbose --release
+          - cargo test --verbose
+          - cargo test --verbose --release
+          - cargo clippy --all-targets --verbose
+          - cargo doc --no-deps --document-private-items --verbose
+          - cargo fmt --check
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install alsa deps
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y libasound2-dev portaudio19-dev build-essential libpulse-dev libdbus-1-dev
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - run: ${{ matrix.cmd }}
