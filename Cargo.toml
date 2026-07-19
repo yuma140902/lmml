@@ -21,4 +21,4 @@ array-init = "2.1.0"
 clap = { version = "4.5.28", features = [ "derive" ] }
 nom = "8.0.0"
 nom-language = "0.1.0"
-rodio = "0.20.1"
+rodio = "0.22.0"
