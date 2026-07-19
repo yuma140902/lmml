@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2](https://github.com/yuma140902/lmml/compare/lmml-parser-v0.6.1...lmml-parser-v0.6.2) - 2026-07-19
+
+### Other
+
+- CRLF to LF ([#42](https://github.com/yuma140902/lmml/pull/42))
+
 ## [0.6.1](https://github.com/yuma140902/lmml/compare/lmml-parser-v0.6.0...lmml-parser-v0.6.1) - 2026-07-19
 
 ### Other
