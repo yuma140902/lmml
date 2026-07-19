@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.3](https://github.com/yuma140902/lmml/compare/lmml-v0.6.2...lmml-v0.6.3) - 2026-07-19
+
+### Other
+
+- update msrv and edition ([#48](https://github.com/yuma140902/lmml/pull/48))
+
 ## [0.6.2](https://github.com/yuma140902/lmml/compare/lmml-v0.6.1...lmml-v0.6.2) - 2026-07-19
 
 ### Other

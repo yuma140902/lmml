@@ -3,7 +3,7 @@ resolver = "3"
 members = ["lmml", "lmml-cli", "lmml-parser"]
 
 [workspace.package]
-version = "0.6.2"
+version = "0.6.3"
 authors = ["yuma14"]
 edition = "2024"
 rust-version = "1.97.0"
@@ -11,8 +11,8 @@ repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-lmml = { path = "./lmml/", version = "0.6.2" }
-lmml-parser = { path = "./lmml-parser", version = "0.6.2" }
+lmml = { path = "./lmml/", version = "0.6.3" }
+lmml-parser = { path = "./lmml-parser", version = "0.6.3" }
 
 anyhow = "1.0.104"
 array-init = "2.1.0"
