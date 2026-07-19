@@ -83,7 +83,7 @@ impl EvalEnv {
         &self.channels[self.current_channel]
     }
 
-    pub fn current_mut(&mut self) -> &mut ChannelEnv {
+    pub const fn current_mut(&mut self) -> &mut ChannelEnv {
         &mut self.channels[self.current_channel]
     }
 }
