@@ -533,7 +533,7 @@ dependencies = [
 
 [[package]]
 name = "lmml"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "array-init",
  "rodio",
@@ -541,7 +541,7 @@ dependencies = [
 
 [[package]]
 name = "lmml-cli"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "anyhow",
  "array-init",
@@ -555,7 +555,7 @@ dependencies = [
 
 [[package]]
 name = "lmml-parser"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "lmml",
  "nom 8.0.0",
