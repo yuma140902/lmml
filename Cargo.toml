@@ -12,9 +12,9 @@ license = "MIT OR Apache-2.0"
 lmml = { path = "./lmml/", version = "0.6.1" }
 lmml-parser = { path = "./lmml-parser", version = "0.6.1" }
 
-anyhow = "1.0.95"
+anyhow = "1.0.104"
 array-init = "2.1.0"
-clap = { version = "4.5.28", features = ["derive"] }
+clap = { version = "4.6.2", features = ["derive"] }
 nom = "8.0.0"
 nom-language = "0.1.0"
 rodio = "0.22.2"
