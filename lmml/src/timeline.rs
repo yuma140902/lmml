@@ -3,7 +3,7 @@ use std::{fmt::Display, num::NonZero, time::Duration};
 use rodio::{Player, Source};
 
 use crate::oscillator::{
-    ChannelWave, ChordWave, MusicWave, NoteWave, ScoreWave, Waveform, SAMPLE_RATE_NONZERO,
+    ChannelWave, ChordWave, MusicWave, NoteWave, SAMPLE_RATE_NONZERO, ScoreWave, Waveform,
 };
 
 #[derive(Debug, PartialEq, Clone)]

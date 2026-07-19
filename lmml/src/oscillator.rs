@@ -1,8 +1,8 @@
 use std::{f32::consts::PI, num::NonZero};
 
 use rodio::{
-    source::{TakeDuration, Zero},
     Source,
+    source::{TakeDuration, Zero},
 };
 
 pub const SAMPLE_RATE: u32 = 44100;
