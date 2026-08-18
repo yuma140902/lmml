@@ -6,23 +6,27 @@ use crate::oscillator::{
     ChannelWave, ChordWave, MusicWave, NoteWave, SAMPLE_RATE_NONZERO, ScoreWave, Waveform,
 };
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Clone)]
 pub struct LmmlTimeline {
     pub timeline: [Vec<Element>; 16],
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Clone)]
 pub enum Element {
     Note(Note),
     Event(Event),
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Clone)]
 pub struct Note {
     pub length_ms: u32,
     pub note_type: NoteType,
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Clone)]
 pub enum NoteType {
     Single {
@@ -38,6 +42,7 @@ pub enum NoteType {
     Rest,
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Event {
     ChangeTempo(u32),

@@ -8,6 +8,7 @@ use rodio::{
 pub const SAMPLE_RATE: u32 = 44100;
 pub const SAMPLE_RATE_NONZERO: NonZero<u32> = NonZero::new(SAMPLE_RATE).unwrap();
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy)]
 pub enum Waveform {
     Zero,
@@ -17,6 +18,7 @@ pub enum Waveform {
     Sine,
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
 pub struct NoteWave {
     frame: usize,
@@ -110,6 +112,7 @@ impl Iterator for NoteWave {
     }
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
 pub struct ChordWave(Vec<NoteWave>);
 

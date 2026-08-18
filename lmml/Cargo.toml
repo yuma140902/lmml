@@ -14,3 +14,7 @@ license.workspace = true
 [dependencies]
 array-init.workspace = true
 rodio.workspace = true
+serde = { workspace = true, optional = true }
+
+[features]
+serde = ["dep:serde"]
