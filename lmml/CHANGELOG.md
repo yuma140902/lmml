@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.6](https://github.com/yuma140902/lmml/compare/lmml-v0.6.5...lmml-v0.6.6) - 2026-08-18
+
+### Added
+
+- serde feature flag を追加 ([#60](https://github.com/yuma140902/lmml/pull/60))
+- 公開されている構造体に Debug と Clone を実装する ([#59](https://github.com/yuma140902/lmml/pull/59))
+- パッケージごとに別のバージョン番号を使用する ([#58](https://github.com/yuma140902/lmml/pull/58))
+
 ## [0.6.3](https://github.com/yuma140902/lmml/compare/lmml-v0.6.2...lmml-v0.6.3) - 2026-07-19
 
 ### Other

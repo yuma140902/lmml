@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.6](https://github.com/yuma140902/lmml/compare/lmml-cli-v0.6.5...lmml-cli-v0.6.6) - 2026-08-18
+
+### Added
+
+- パッケージごとに別のバージョン番号を使用する ([#58](https://github.com/yuma140902/lmml/pull/58))
+
 ## [0.6.5](https://github.com/yuma140902/lmml/compare/lmml-cli-v0.6.4...lmml-cli-v0.6.5) - 2026-08-13
 
 ### Other
