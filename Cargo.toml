@@ -10,8 +10,8 @@ repository = "https://github.com/yuma140902/lmml"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-lmml = { path = "./lmml/", version = "0.6.5" }
-lmml-parser = { path = "./lmml-parser", version = "0.6.5" }
+lmml = { path = "./lmml/", version = "0.6.6" }
+lmml-parser = { path = "./lmml-parser", version = "0.6.6" }
 
 anyhow = "1.0.104"
 array-init = "2.1.0"
