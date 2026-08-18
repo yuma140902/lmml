@@ -17,6 +17,7 @@ pub enum Waveform {
     Sine,
 }
 
+#[derive(Debug, Clone)]
 pub struct NoteWave {
     frame: usize,
     waveform: Waveform,
@@ -109,6 +110,7 @@ impl Iterator for NoteWave {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct ChordWave(Vec<NoteWave>);
 
 impl ChordWave {
@@ -151,6 +153,7 @@ impl Iterator for ChordWave {
     }
 }
 
+#[derive(Debug, Clone)]
 pub enum ScoreWave {
     Note(TakeDuration<NoteWave>),
     Chord(TakeDuration<ChordWave>),
@@ -187,6 +190,7 @@ impl Iterator for ScoreWave {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct ChannelWave {
     waves: Vec<ScoreWave>,
     index: usize,
@@ -235,6 +239,7 @@ impl Iterator for ChannelWave {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct MusicWave(Vec<ChannelWave>);
 
 impl MusicWave {
