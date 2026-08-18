@@ -23,9 +23,11 @@ jobs:
         cmd:
           - cargo build --all-targets --verbose
           - cargo build --all-targets --verbose --release
+          - cargo build --all-targets --verbose -F serde
           - cargo test --verbose
           - cargo test --verbose --release
           - cargo clippy --all-targets --verbose
+          - cargo clippy --all-targets --verbose -F serde
           - cargo doc --no-deps --document-private-items --verbose
           - cargo fmt --check
 

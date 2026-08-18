@@ -2,9 +2,11 @@ use std::fmt::Display;
 
 use crate::timeline::{Element, Event, LmmlTimeline, Note, NoteType};
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct LmmlAst(pub Vec<LmmlCommand>);
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum LmmlCommand {
     Note {
@@ -33,6 +35,7 @@ pub enum LmmlCommand {
     DecreaseOctave,
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum NoteChar {
     C,
@@ -44,6 +47,7 @@ pub enum NoteChar {
     B,
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum NoteModifier {
     Sharp,
@@ -72,6 +76,7 @@ fn length_to_ms(tempo: u32, (length, is_dotted): (u32, bool)) -> u32 {
     ((4.0 / length * 60.0 / tempo as f32 * 1000.0) * dot) as u32
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Clone)]
 pub struct EvalEnv {
     pub current_channel: usize,
@@ -88,6 +93,7 @@ impl EvalEnv {
     }
 }
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
 pub struct ChannelEnv {
     pub octave: i32,
