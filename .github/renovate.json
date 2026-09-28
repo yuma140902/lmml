@@ -11,5 +11,10 @@
       ],
       "minimumReleaseAge": "7 days"
     }
-  ]
+  ],
+  "lockFileMaintenance": {
+    "schedule": [
+      "* 0-3 * * 5"
+    ]
+  }
 }
