@@ -464,7 +464,7 @@ checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
 
 [[package]]
 name = "lmml"
-version = "0.6.6"
+version = "0.6.7"
 dependencies = [
  "array-init",
  "rodio",
@@ -473,7 +473,7 @@ dependencies = [
 
 [[package]]
 name = "lmml-cli"
-version = "0.6.11"
+version = "0.6.12"
 dependencies = [
  "anyhow",
  "array-init",
@@ -487,7 +487,7 @@ dependencies = [
 
 [[package]]
 name = "lmml-parser"
-version = "0.6.6"
+version = "0.6.7"
 dependencies = [
  "lmml",
  "nom",
