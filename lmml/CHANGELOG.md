@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.7](https://github.com/yuma140902/lmml/compare/lmml-v0.6.6...lmml-v0.6.7) - 2026-10-24
+
+### Other
+
+- update Cargo.toml dependencies
+
 ## [0.6.6](https://github.com/yuma140902/lmml/compare/lmml-v0.6.5...lmml-v0.6.6) - 2026-08-18
 
 ### Added
