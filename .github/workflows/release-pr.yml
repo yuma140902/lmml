@@ -27,6 +27,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          
+      - name: Install alsa deps
+        run: |
+          sudo apt update
+          sudo apt install -y libasound2-dev portaudio19-dev build-essential libpulse-dev libdbus-1-dev
 
       - name: Create or update release PR
         uses: release-plz/action@b8d6b54b02889ff2ae2bb82e8b57c3a8fc1683a5 # v0.5
